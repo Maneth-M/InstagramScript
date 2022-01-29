@@ -1,0 +1,9 @@
+{% extends "projects/base.html" %}
+{% load bootstrap5 %}
+{% block content %}
+    {% for i in project %}
+        <h1 class="text-primary">
+            {{ i.name }}
+        </h1>
+    {% endfor %}
+{% endblock content %}
