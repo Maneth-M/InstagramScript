@@ -1,11 +1,18 @@
 {% extends "projects/base.html" %}
 {% load bootstrap5 %}
+{% load crispy_forms_tags %}
 {% block content %}
-    <div>
+
+    <div class="h-100 d-flex justify-content-center align-items-center mt-5 ">
         <form method="POST">
-            {% csrf_token %}
-            {{ form }}
-            <button class="btn btn-block" type="submit">
+            <fieldset>
+                {% csrf_token %}
+                    {{ form|crispy }}
+
+
+            </fieldset>
+
+            <button class="btn btn-outline-dark" type="submit">
                 Sign Up
             </button>
         </form>
