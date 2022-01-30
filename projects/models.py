@@ -23,3 +23,8 @@ class Project(models.Model):
 class projectAccounts(models.Model):
     username = models.CharField(max_length=30, primary_key=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    visiblity = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.username
+
