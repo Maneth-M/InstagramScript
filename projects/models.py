@@ -19,3 +19,7 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+
+class projectAccounts(models.Model):
+    username = models.CharField(max_length=30, primary_key=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
