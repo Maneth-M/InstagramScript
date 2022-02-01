@@ -3,26 +3,31 @@ from django.contrib.auth.models import User
 from .forms import NewProject
 from django.contrib import messages
 from .models import Project, projectAccounts
-from urllib.request import urlopen
-import json
+from instagrapi import Client
 
+
+cl = Client()
+cl.login('lasticeberg', '123AgunamD')
 # Home Page
 def home(request):
     if request.user.is_authenticated:
         id = request.GET.get('id', '')
-        if not id  == "":
+        acc = request.GET.get('acc', '')
+        if not id == "":
+            if not acc == "":
+
             project = Project.objects.filter(id=id).first()
             result = ""
             if request.method == 'POST':
                 keyword = request.POST.get('key')
-                result = urlopen(f"https://www.instagram.com/web/search/topsearch/?context=blended&query={keyword}").read()
-                result = json.loads(result)
-            return render(request, "projects/project.html", {'project': project, "results": result})
-        else:
-            accs = ""
+                try:
+                    result = cl.user_info_by_username(keyword).dict()
+                except:
+                    pass
+            return render(request, "projects/project.html", {'project': project, "results": result, 'id': id})
         userId = request.user.username
         user = User.objects.filter(username=userId).first()
-        return render(request, "projects/index.html", {'project_id': user.project_set.all(), "accounts": accs})
+        return render(request, "projects/index.html", {'project_id': user.project_set.all()})
     else:
         return redirect('login')
 

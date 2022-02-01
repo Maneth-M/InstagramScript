@@ -27,15 +27,13 @@
     </div>
 
     <div>
-        {% for result in results.users %}
-            {% if result.user.is_private == False %}
-                <img src="{{ result.user.profile_pic_url }}" alt="profile Picture" >
-
-
-                <h5>
-                    {{ result.user.username }}
-                </h5>
-            {% endif %}
-        {% endfor %}
+        {% if results %}
+            <a class="btn outline-dark" href="?id={{ id }}&acc={{ results.username }}">add {{ results.username }}</a>
+            {{ results.username }}
+            <img src="{{ results.profile_pic_url }}" alt="none">
+        {% else %}
+            <h2>Something went wrong</h2>
+        {% endif %}
     </div>
 {% endblock content %}
+
