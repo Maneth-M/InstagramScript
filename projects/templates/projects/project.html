@@ -15,11 +15,11 @@
     </div>
     <div class="container h-100">
 
-        <form method="POST">
-            {% csrf_token %}
+        <form method="GET">
             <div class="d-flex justify-content-center h-100">
                 <div class="searchbar">
                     <input class="search_input" type="text" name="key" placeholder="Search...">
+                    <input type="hidden" name="id" value="{{ id }}">
                     <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
                 </div>
             </div>
@@ -27,12 +27,23 @@
     </div>
 
     <div>
-        {% if results %}
-            <a class="btn outline-dark" href="?id={{ id }}&acc={{ results.username }}">add {{ results.username }}</a>
+        {% if results != 'e' or result != 'False'%}
+            <form method="POST">
+                {% csrf_token %}
+                <div class="d-flex justify-content-center h-100">
+                    <div class="searchbar">
+                        <input type="hidden" name="acc" value="{{ results.username }}">
+                        <input type="hidden" name="id" value="{{ id }}">
+
+                        <button class="btn btn-outline-dark"  type="submit"><a href="#">add {{ results.username }}</a></button>
+                    </div>
+                </div>
+            </form>
+
             {{ results.username }}
             <img src="{{ results.profile_pic_url }}" alt="none">
-        {% else %}
-            <h2>Something went wrong</h2>
+        {% elif results == "e" %}
+            <h2>System Error or the Account Doesn't exist. Please try again in a few minutes</h2>
         {% endif %}
     </div>
 {% endblock content %}

@@ -4,7 +4,7 @@ from .forms import NewProject
 from django.contrib import messages
 from .models import Project, projectAccounts
 from instagrapi import Client
-
+# from accounts.models import accounts
 
 cl = Client()
 cl.login('lasticeberg', '123AgunamD')
@@ -12,19 +12,25 @@ cl.login('lasticeberg', '123AgunamD')
 def home(request):
     if request.user.is_authenticated:
         id = request.GET.get('id', '')
-        acc = request.GET.get('acc', '')
+        key = request.GET.get('key', '')
+        result = False
         if not id == "":
-            if not acc == "":
-
-            project = Project.objects.filter(id=id).first()
-            result = ""
-            if request.method == 'POST':
-                keyword = request.POST.get('key')
+            if not key == "":
                 try:
-                    result = cl.user_info_by_username(keyword).dict()
+                    result = cl.user_info_by_username(key).dict()
                 except:
-                    pass
-            return render(request, "projects/project.html", {'project': project, "results": result, 'id': id})
+                    result = "e"
+            project = Project.objects.filter(id=id).first()
+            if request.method == "POST":
+                acc = request.POST.get("acc")
+                print(acc)
+                print(project)
+                instance = projectAccounts(username=acc, project=project).save()
+                messages.success(request, f"{acc} Added to the Project")
+            accs = projectAccounts.objects.filter(project=project).all()
+            print(len(accs))
+            return render(request, "projects/project.html", {'project': project, "results": result, 'id': id, 'accounts': accs})
+
         userId = request.user.username
         user = User.objects.filter(username=userId).first()
         return render(request, "projects/index.html", {'project_id': user.project_set.all()})
