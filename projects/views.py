@@ -7,5 +7,4 @@ def home(request):
         userId = request.user.username
     user = User.objects.filter(username=userId).first()
 
-    return render(request, "projects/index.html", {'project': user.project_set.all()})
-1
+    return render(request, "projects/index.html", {'project': user})
