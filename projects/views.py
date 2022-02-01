@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from .forms import NewProject
 from django.contrib import messages
 from .models import Project, projectAccounts
-
+from urllib.request import urlopen
+import json
 
 # Home Page
 def home(request):
@@ -11,10 +12,16 @@ def home(request):
         id = request.GET.get('id', '')
         if not id  == "":
             project = Project.objects.filter(id=id).first()
-            return render(request, "projects/project.html", {'project': project})
+            result = ""
+            if request.method == 'POST':
+                keyword = request.POST.get('key')
+                result = urlopen(f"https://www.instagram.com/web/search/topsearch/?context=blended&query={keyword}").read()
+                result = json.loads(result)
+            return render(request, "projects/project.html", {'project': project, "results": result})
+        else:
+            accs = ""
         userId = request.user.username
         user = User.objects.filter(username=userId).first()
-        accs = projectAccounts.objects.filter(projects=id).all()
         return render(request, "projects/index.html", {'project_id': user.project_set.all(), "accounts": accs})
     else:
         return redirect('login')

@@ -16,9 +16,9 @@
 
 {#Display Exsisting Projects#}
     <div>
-        {% if projects %}
+        {% if project_id %}
         <div>
-            {% for project in projects %}
+            {% for project in project_id %}
                 <h2>
                     <a href="?id={{ project.id }}">{{ project.name }}</a>
                 </h2>

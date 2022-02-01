@@ -2,6 +2,40 @@
 {% load bootstrap5 %}
 {% block content %}
     <div>
-        {{ project.cDate }}
+        <a href=""></a>
+    </div>
+    <div>
+        {% if accounts %}
+            {% for account in accounts %}
+                <h2>{{ account.username }}</h2>
+            {% endfor %}
+        {% else %}
+            <h2>You haven't added any accounts yet</h2>
+        {% endif %}
+    </div>
+    <div class="container h-100">
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center h-100">
+                <div class="searchbar">
+                    <input class="search_input" type="text" name="key" placeholder="Search...">
+                    <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        {% for result in results.users %}
+            {% if result.user.is_private == False %}
+                <img src="{{ result.user.profile_pic_url }}" alt="profile Picture" >
+
+
+                <h5>
+                    {{ result.user.username }}
+                </h5>
+            {% endif %}
+        {% endfor %}
     </div>
 {% endblock content %}

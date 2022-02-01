@@ -8,3 +8,4 @@ class NewProject(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name']
+
