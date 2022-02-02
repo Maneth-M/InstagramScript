@@ -7,15 +7,15 @@ from instagrapi import Client
 # from accounts.models import accounts
 
 cl = Client()
-cl.login('lasticeberg', '123AgunamD')
+cl.login('lasticebergs', '123AgunamD')
 # Home Page
 def home(request):
     if request.user.is_authenticated:
         id = request.GET.get('id', '')
         key = request.GET.get('key', '')
-        result = False
+        result = ''
         if not id == "":
-            if not key == "":
+            if not len(key) == 0:
                 try:
                     result = cl.user_info_by_username(key).dict()
                 except:
@@ -28,7 +28,7 @@ def home(request):
                 instance = projectAccounts(username=acc, project=project).save()
                 messages.success(request, f"{acc} Added to the Project")
             accs = projectAccounts.objects.filter(project=project).all()
-            print(len(accs))
+            print(result)
             return render(request, "projects/project.html", {'project': project, "results": result, 'id': id, 'accounts': accs})
 
         userId = request.user.username

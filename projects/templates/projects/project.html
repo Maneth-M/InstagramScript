@@ -1,50 +1,117 @@
 {% extends "projects/base.html" %}
 {% load bootstrap5 %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'projects/gallery.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'projects/card.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+{% endblock head %}
 {% block content %}
-    <div>
-        <a href=""></a>
-    </div>
-    <div>
-        {% if accounts %}
-            {% for account in accounts %}
-                <h2>{{ account.username }}</h2>
-            {% endfor %}
-        {% else %}
-            <h2>You haven't added any accounts yet</h2>
-        {% endif %}
-    </div>
-    <div class="container h-100">
 
+{# Search Bar #}
+
+    <div class="container h-100 mt-5 mr-5">
         <form method="GET">
-            <div class="d-flex justify-content-center h-100">
-                <div class="searchbar">
-                    <input class="search_input" type="text" name="key" placeholder="Search...">
-                    <input type="hidden" name="id" value="{{ id }}">
-                    <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
+            <div class="container d-flex flex-row-reverse">
+                <div class="d-flex justify-content-center h-100">
+                    <div class="searchbar">
+                        <input class="search_input" type="text" name="key" placeholder="Search Username">
+                        <input type="hidden" name="id" value="{{ id }}">
+                        <a href="" class="search_icon"><i class="fas fa-search"></i></a>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
 
-    <div>
-        {% if results != 'e' or result != 'False'%}
-            <form method="POST">
-                {% csrf_token %}
-                <div class="d-flex justify-content-center h-100">
-                    <div class="searchbar">
-                        <input type="hidden" name="acc" value="{{ results.username }}">
-                        <input type="hidden" name="id" value="{{ id }}">
+{# Search Result #}
 
-                        <button class="btn btn-outline-dark"  type="submit"><a href="#">add {{ results.username }}</a></button>
+    <div>
+        {% if result == '' %}
+        {% elif results == "e" %}
+        <h2>System Error or the Account Doesn't exist. Please try again in a few minutes</h2>
+        {% else %}
+            <div class="twPc-div">
+                <a class="twPc-bg twPc-block"></a>
+                <div>
+                    <div class="twPc-button">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-center h-100">
+                                <div class="searchbar">
+                                    <input type="hidden" name="acc" value="{{ results.username }}">
+                                    <input type="hidden" name="id" value="{{ id }}">
+                                    <button class="btn btn-outline-dark"  type="submit"><a href="#">add {{ results.username }}</a></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <a title={{ result.username }} href="https://instagram.com/{{ result.username }}" class="twPc-avatarLink">
+                        <img alt="{{ result.username }}" src="https://mertskaplan.com/wp-content/plugins/msk-twprofilecard/img/mertskaplan.jpg" class="twPc-avatarImg">
+                    </a>
+
+                    <div class="twPc-divUser">
+                        <div class="twPc-divName">
+                            <a href="https://twitter.com/mertskaplan">{{ result.username }}</a>
+                        </div>
+                        <span>
+				<a href="https://instagram.com/{{ result.username }}">@<span>{{ result.username }}</span></a>
+			</span>
+                    </div>
+
+                    <div class="twPc-divStats">
+                        <ul class="twPc-Arrange">
+                            <li class="twPc-ArrangeSizeFit">
+                                <a href="https://twitter.com/mertskaplan" title="9.840 Tweet">
+                                    <span class="twPc-StatLabel twPc-block">Tweets</span>
+                                    <span class="twPc-StatValue">9.840</span>
+                                </a>
+                            </li>
+                            <li class="twPc-ArrangeSizeFit">
+                                <a href="https://twitter.com/mertskaplan/following" title="885 Following">
+                                    <span class="twPc-StatLabel twPc-block">Following</span>
+                                    <span class="twPc-StatValue">885</span>
+                                </a>
+                            </li>
+                            <li class="twPc-ArrangeSizeFit">
+                                <a href="https://twitter.com/mertskaplan/followers" title="1.810 Followers">
+                                    <span class="twPc-StatLabel twPc-block">Followers</span>
+                                    <span class="twPc-StatValue">1.810</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </form>
+            </div>
 
-            {{ results.username }}
-            <img src="{{ results.profile_pic_url }}" alt="none">
-        {% elif results == "e" %}
-            <h2>System Error or the Account Doesn't exist. Please try again in a few minutes</h2>
         {% endif %}
+    </div>
+
+    <div class="container-fluid">
+        <div class="px-lg-5">
+            <div class="row ">
+                {% if accounts %}
+                    {% for account in accounts %}
+                        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                            <div class="bg-white rounded shadow-sm"><img src="https://bootstrapious.com/i/snippets/sn-gallery/img-2.jpg" alt="" class="img-fluid card-img-top">
+                                <div class="p-4">
+                                    <h5> <a href="#" class="text-dark">{{ account.username }}</a></h5>
+                                    <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
+                                    <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
+                                        <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">PNG</span></p>
+                                        <div class="badge badge-primary px-3 rounded-pill font-weight-normal">Trend</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h2>You haven't added any accounts yet</h2>
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock content %}
 
