@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'bootstrap5',
     "crispy_forms",
     "crispy_bootstrap5",
+    'django.contrib.humanize',
+    'analyze.apps.AnalyzeConfig',
     'accounts.apps.AccountsConfig',
     'projects.apps.ProjectsConfig',
     'users.apps.UsersConfig',

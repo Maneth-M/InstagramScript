@@ -1,6 +1,8 @@
 {% extends "projects/base.html" %}
 {% load bootstrap5 %}
 {% load static %}
+{% load humanize %}
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'projects/gallery.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'projects/card.css' %}">
@@ -18,95 +20,112 @@
                     <div class="searchbar">
                         <input class="search_input" type="text" name="key" placeholder="Search Username">
                         <input type="hidden" name="id" value="{{ id }}">
-                        <a href="" class="search_icon"><i class="fas fa-search"></i></a>
+                        <button type="submit" class="search_icon"><i class="fas fa-search"></i></button>
+
                     </div>
                 </div>
             </div>
+
         </form>
     </div>
 
 {# Search Result #}
 
-    <div>
-        {% if result == '' %}
-        {% elif results == "e" %}
-        <h2>System Error or the Account Doesn't exist. Please try again in a few minutes</h2>
-        {% else %}
-            <div class="twPc-div">
-                <a class="twPc-bg twPc-block"></a>
-                <div>
-                    <div class="twPc-button">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="d-flex justify-content-center h-100">
-                                <div class="searchbar">
-                                    <input type="hidden" name="acc" value="{{ results.username }}">
-                                    <input type="hidden" name="id" value="{{ id }}">
-                                    <button class="btn btn-outline-dark"  type="submit"><a href="#">add {{ results.username }}</a></button>
-                                </div>
+    {% if check != None %}
+    {% else %}
+        <div>
+            {% if results == '' %}
+
+            {% elif results == "e" %}
+
+            <h2>System Error or the Account Doesn't exist. Please try again in a few minutes</h2>
+
+            {% else %}
+                <div class="container mr-5">
+                    <div class="twPc-div">
+                        <a class="twPc-bg twPc-block"></a>
+                        <div>
+                            <div class="twPc-button">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="d-flex justify-content-center h-100">
+                                        <div class="searchbar">
+                                            <input type="hidden" name="acc" value="{{ results.username }}">
+                                            <input type="hidden" name="id" value="{{ id }}">
+                                            <button class="btn btn-dark" type="submit">add {{ results.username }}</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
-                    </div>
 
-                    <a title={{ result.username }} href="https://instagram.com/{{ result.username }}" class="twPc-avatarLink">
-                        <img alt="{{ result.username }}" src="https://mertskaplan.com/wp-content/plugins/msk-twprofilecard/img/mertskaplan.jpg" class="twPc-avatarImg">
-                    </a>
+                            <a title={{ results.username }} href="https://instagram.com/{{ results.username }}" class="twPc-avatarLink">
+                                <img alt="{{ results.username }}" src={% static 'accounts/profilePictures/'|add:results.pk|add:'.png' %} class="twPc-avatarImg">
+                            </a>
 
-                    <div class="twPc-divUser">
-                        <div class="twPc-divName">
-                            <a href="https://twitter.com/mertskaplan">{{ result.username }}</a>
+                            <div class="twPc-divUser">
+                                <div class="twPc-divName">
+                                    <a href="https://instagram.com/{{ result.username }}">@{{ results.username }}</a>
+                                </div>
+                                <span>
+                    </span>
+                            </div>
+                            <div class="twPc-divStats">
+                                <ul class="twPc-Arrange">
+                                    <li class="twPc-ArrangeSizeFitArrangeSizeFit">
+                                        <span class="twPc-StatLabel twPc-block">posts</span>
+                                        <span class="twPc-StatValue">{{ results.media_count|intcomma }}</span>
+                                    </li>
+                                    <li class="twPc-ArrangeSizeFit">
+                                        <span class="twPc-StatLabel twPc-block">Following</span>
+                                        <span class="twPc-StatValue">{{ results.following_count|intcomma }}</span>
+                                    </li>
+                                    <li class="twPc-ArrangeSizeFit">
+                                        <span class="twPc-StatLabel twPc-block">Followers</span>
+                                        <span class="twPc-StatValue">{{ results.follower_count|intcomma }}</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                        <span>
-				<a href="https://instagram.com/{{ result.username }}">@<span>{{ result.username }}</span></a>
-			</span>
-                    </div>
-
-                    <div class="twPc-divStats">
-                        <ul class="twPc-Arrange">
-                            <li class="twPc-ArrangeSizeFit">
-                                <a href="https://twitter.com/mertskaplan" title="9.840 Tweet">
-                                    <span class="twPc-StatLabel twPc-block">Tweets</span>
-                                    <span class="twPc-StatValue">9.840</span>
-                                </a>
-                            </li>
-                            <li class="twPc-ArrangeSizeFit">
-                                <a href="https://twitter.com/mertskaplan/following" title="885 Following">
-                                    <span class="twPc-StatLabel twPc-block">Following</span>
-                                    <span class="twPc-StatValue">885</span>
-                                </a>
-                            </li>
-                            <li class="twPc-ArrangeSizeFit">
-                                <a href="https://twitter.com/mertskaplan/followers" title="1.810 Followers">
-                                    <span class="twPc-StatLabel twPc-block">Followers</span>
-                                    <span class="twPc-StatValue">1.810</span>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
-            </div>
+            {% endif %}
+        </div>
+    {% endif %}
 
-        {% endif %}
-    </div>
-
-    <div class="container-fluid">
-        <div class="px-lg-5">
-            <div class="row ">
+{# Show Added Accounts #}
+    <div class="container-fluid mt-5">
+        <div class="px-lg-5 ">
+            <div class="row">
                 {% if accounts %}
-                    {% for account in accounts %}
-                        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                            <div class="bg-white rounded shadow-sm"><img src="https://bootstrapious.com/i/snippets/sn-gallery/img-2.jpg" alt="" class="img-fluid card-img-top">
-                                <div class="p-4">
-                                    <h5> <a href="#" class="text-dark">{{ account.username }}</a></h5>
-                                    <p class="small text-muted mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>
-                                    <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                                        <p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">PNG</span></p>
-                                        <div class="badge badge-primary px-3 rounded-pill font-weight-normal">Trend</div>
+                    <div >
+                        <a class="btn btn-outline-dark mb-5" style="width: 100%" href="analyze/?id={{ id }}">Analyze Accounts</a>
+                    </div>
+                        {% for account in accounts %}
+                            <div class="col-xl-2 col-lg-4 col-md-6 mb-4 d-flex justify-content-center h-100">
+                                <div class="bg-white rounded shadow-sm w-50 h-50 ml-5"><img src="{% static 'accounts/profilePictures/'|add:account.account.userId|add:'.png' %}" alt="" class="img-fluid card-img-top">
+                                    <div class="p-4">
+                                        <h5> <a href="#" class="text-dark">{{ account.account.username }}</a></h5>
+                                        <div class="d-flex justify-content-center h-100">
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Followers
+                                                    <span class="badge badge-primary badge-pill">{{ account.account.followers.today|intcomma }}</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Following
+                                                    <span class="badge badge-primary badge-pill">{{ account.account.following.today|intcomma }}</span>
+                                                </li>
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    Posts
+                                                    <span class="badge badge-primary badge-pill">{{ account.account.media.today|intcomma }}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+
                 {% else %}
                     <h2>You haven't added any accounts yet</h2>
                 {% endif %}
