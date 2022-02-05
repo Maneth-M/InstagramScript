@@ -1,0 +1,20 @@
+{% extends "projects/base.html" %}
+{% load bootstrap5 %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <h1>{{ project }}</h1>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort By
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="?id={{ project.id }}&sort=V">Views</a></li>
+            <li><a class="dropdown-item" href="?id={{ project.id }}&sort=L">Likes</a></li>
+            <li><a class="dropdown-item" href="?id={{ project.id }}&sort=C">Comments</a></li>
+        </ul>
+    </div>
+    {% for account in accounts %}
+        <h4>{{ account }}</h4>
+    {% endfor %}
+{% endblock content %}

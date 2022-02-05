@@ -12,12 +12,13 @@
     <link rel="stylesheet" type="text/css" href="{% static 'projects/main.css' %}">
 
     {% block head %}
+        {% if title %}
+            <title>{{ title }}</title>
+        {% else %}
+            <title>Insta Analyze</title>
+        {% endif %}
     {% endblock head %}
-    {% if tittle %}
-    <title>{{ title }}</title>
-    {% else %}
-    <title>Hello</title>
-    {% endif %}
+
 </head>
 <body>
 {#    {% if messages %}#}
