@@ -36,3 +36,6 @@ class media(models.Model):
     commentsIn = models.JSONField(default=dict)
     viewsIn = models.JSONField(default=dict)
     Date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.mediaId

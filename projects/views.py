@@ -6,13 +6,13 @@ from django.contrib.auth.models import User
 from .forms import NewProject
 from django.contrib import messages
 from .models import Project, projectAccounts
-from accounts.models import instaAccounts
+from accounts.models import instaAccounts, media
 from instagrapi import Client
 import requests
 
-#
-# cl = Client()
-# cl.login('lasticebergs', '123AgunamD')
+
+cl = Client()
+cl.login('lasticeberg', '123AgunamD')
 
 
 # Home Page
@@ -25,47 +25,96 @@ def home(request):
 
         if not id == "":
             project = Project.objects.filter(id=id).first()
-            if not len(key) == 0:
-                check = instaAccounts.objects.filter(username=key).first()
-                if check is not None:
-                    check = instaAccounts.objects.filter(username=key).first().projectaccounts_set.filter(project=project).first()
-                if check == None:
-                    try:
-                        result = cl.user_info_by_username(key).dict()
-                        imgResponse = requests.get(result['profile_pic_url_hd'])
-                        with open(f"accounts/static/accounts/profilePictures/{result['pk']}.png", 'wb') as f:
-                            f.write(imgResponse.content)
-                    except Exception as e:
-                        print(e)
-                        result = "e"
-                else:
-                    messages.info(request, "Account Already Added")
+            if request.method == "GET":
+                if not len(key) == 0:
+                    check = instaAccounts.objects.filter(username=key.lower()).first()
+                    if check is not None:
+                        check = instaAccounts.objects.filter(username=key.lower()).first().projectaccounts_set.filter(project=project).first()
+                        if check == None:
+                            result = instaAccounts.objects.filter(username=key.lower()).first()
+                            accs = projectAccounts.objects.filter(project=project).all()
+                            return render(
+                                request,
+                                "projects/project.html",
+                                {
+                                    'project': project,
+                                    "results": result,
+                                    'id': id,
+                                    'accounts': accs,
+                                    'check': check
+                                }
+                            )
+
+                    if check == None:
+                        try:
+                            result = cl.user_info_by_username(key).dict()
+                            imgResponse = requests.get(result['profile_pic_url_hd'])
+                            with open(f"accounts/static/accounts/profilePictures/{result['pk']}.png", 'wb') as f:
+                                f.write(imgResponse.content)
+                            followers = {"today":result['follower_count']}
+                            following = {"today":result['following_count']}
+                            posts = {"today":result['media_count']}
+                            instaAccounts(
+                                username=key.lower(),
+                                userId=result['pk'],
+                                isVerified=bool(result['is_verified']),
+                                isBusiness=result['is_business'],
+                                businessCategory=result['business_category_name'],
+                                category=result['category_name'],
+                                followers=followers,
+                                following=following,
+                                media=posts
+                            ).save()
+
+                            medias = cl.user_medias(result['pk'], 10)
+
+                            for item in medias:
+                                if item.media_type == 2:
+                                    mType = 'video'
+                                elif item.media_type == 8:
+                                    mType = 'image'
+                                else:
+                                    mType = ""
+
+                                if item.video_url:
+                                    isVideo = True
+                                    isPhoto = False
+                                    imgResponse = requests.get(item.video_url)
+                                    with open(f"accounts/static/accounts/media/videos/{item.pk}.mp4", 'wb') as f:
+                                        f.write(imgResponse.content)
+                                else:
+                                    isPhoto = True
+                                    isVideo = False
+                                    imgResponse = requests.get(item.video_url)
+                                    with open(f"accounts/static/accounts/media/images/{item.pk}.png", 'wb') as f:
+                                        f.write(imgResponse.content)
+
+                                user = instaAccounts.objects.filter(username=key.lower()).first()
+
+                                media(
+                                    mediaId= item.pk,
+                                    user= user,
+                                    isVideo= isVideo,
+                                    isPhoto= isPhoto,
+                                    likes= item.like_count,
+                                    comments= item.comment_count,
+                                    views= item.view_count,
+                                    Date= item.taken_at
+                                ).save()
+
+
+                        except Exception as e:
+                            print(e)
+                            result = "e"
+                    else:
+                        messages.info(request, "Account Already Added")
 
             if request.method == "POST" and project.size > 0:
                 acc = request.POST.get("acc")
-                followers = {"today":result['follower_count']}
-                following = {"today":result['following_count']}
-                media = {"today":result['media_count']}
-
-                check = instaAccounts.objects.filter(username=key).first()
-
-                if check == None:
-                    instaAccounts(
-                        username=acc.lower(),
-                        userId=result['pk'],
-                        isVerified=bool(result['is_verified']),
-                        isBusiness=result['is_business'],
-                        businessCategory=result['business_category_name'],
-                        category=result['category_name'],
-                        followers=followers,
-                        following=following,
-                        media=media
-                    ).save()
-
-                account = instaAccounts.objects.filter(userId=result['pk']).first()
+                result = instaAccounts.objects.filter(username=acc.lower()).first()
 
                 projectAccounts(
-                    account=account,
+                    account=result,
                     project=project
                 ).save()
 

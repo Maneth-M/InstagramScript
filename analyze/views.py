@@ -5,8 +5,8 @@ from instagrapi import Client
 import requests
 
 #
-# cl = Client()
-# cl.login('lasticebergs', '123AgunamD')
+cl = Client()
+cl.login('lasticeberg', '123AgunamD')
 
 
 def analizeAccounts(request):
@@ -17,6 +17,7 @@ def analizeAccounts(request):
     for account in accounts:
         media = cl.user_medias(account.account.userId, 10)
         print(media)
+
     return render(request, "analyze/analyze.html", {
         "accounts": accounts,
         "project": project,
