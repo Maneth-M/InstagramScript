@@ -29,6 +29,8 @@ class media(models.Model):
     user = models.ForeignKey(instaAccounts, on_delete=models.CASCADE)
     isVideo = models.BooleanField(default=False)
     isPhoto = models.BooleanField(default=False)
+    isMultiple = models.BooleanField(default=False)
+    multiItems = models.JSONField(default=dict)
     likes = models.CharField(max_length=20, default="")
     comments = models.CharField(max_length=20, default="")
     views = models.CharField(max_length=20, default="")
