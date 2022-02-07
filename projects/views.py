@@ -10,9 +10,9 @@ from accounts.models import instaAccounts, media
 from instagrapi import Client
 import requests
 
-
-cl = Client()
-cl.login('lasticeberg', '123AgunamD')
+#
+# cl = Client()
+# cl.login('lasticeberg', '123AgunamD')
 
 
 # Home Page
@@ -88,6 +88,7 @@ def home(request):
                                     imgResponse = requests.get(item.thumbnail_url)
                                     with open(f"accounts/static/accounts/media/images/{item.pk}.png", 'wb') as f:
                                         f.write(imgResponse.content)
+
                                 multiItems = {}
                                 if item.resources:
                                     isMultiple = True
@@ -117,16 +118,16 @@ def home(request):
                                 user = instaAccounts.objects.filter(username=key.lower()).first()
 
                                 media(
-                                    mediaId= item.pk,
-                                    user= user,
-                                    isVideo= isVideo,
-                                    isPhoto= isPhoto,
-                                    isMultiple= isMultiple,
+                                    mediaId=item.pk,
+                                    user=user,
+                                    isVideo=isVideo,
+                                    isPhoto=isPhoto,
+                                    isMultiple=isMultiple,
                                     multiItems=multiItems,
-                                    likes= item.like_count,
-                                    comments= item.comment_count,
-                                    views= item.view_count,
-                                    Date= item.taken_at
+                                    likes=item.like_count,
+                                    comments=item.comment_count,
+                                    views=item.view_count,
+                                    Date=item.taken_at
                                 ).save()
 
                         except Exception as e:

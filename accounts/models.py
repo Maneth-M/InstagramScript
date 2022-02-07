@@ -7,6 +7,8 @@ import uuid, json
 def idgen():
     return int_to_base36(uuid.uuid4().int)[:20]
 
+
+# All Accounts Database Model
 class instaAccounts(models.Model):
     username = models.CharField(max_length=30)
     userId = models.CharField(primary_key=True, max_length=20, default=idgen)
@@ -24,6 +26,7 @@ class instaAccounts(models.Model):
         return self.username
 
 
+# All Media Database Model
 class media(models.Model):
     mediaId = models.CharField(primary_key=True, default=idgen, max_length=20)
     user = models.ForeignKey(instaAccounts, on_delete=models.CASCADE)

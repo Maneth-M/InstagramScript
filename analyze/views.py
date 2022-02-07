@@ -5,8 +5,8 @@ from instagrapi import Client
 import requests
 
 #
-cl = Client()
-cl.login('lasticeberg', '123AgunamD')
+# cl = Client()
+# cl.login('lasticeberg', '123AgunamD')
 
 
 def analizeAccounts(request):
