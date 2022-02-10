@@ -12,7 +12,7 @@ import requests
 
 
 cl = Client()
-cl.login('lasticeberg', '123AgunamD')
+cl.login('lasticebergs', '123AgunamD')
 
 
 # Home Page

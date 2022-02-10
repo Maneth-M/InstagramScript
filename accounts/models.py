@@ -20,7 +20,9 @@ class instaAccounts(models.Model):
     businessCategory = models.CharField(max_length=50, default=None, blank=True, null=True)
     category = models.CharField(max_length=50, default=None, blank=True, null=True)
     dailyTrending = models.JSONField(default=dict)
-
+    views = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
+    comments = models.IntegerField(default=0)
 
     def __str__(self):
         return self.username
@@ -41,6 +43,7 @@ class media(models.Model):
     commentsIn = models.JSONField(default=dict)
     viewsIn = models.JSONField(default=dict)
     Date = models.DateTimeField(default=timezone.now)
+
 
     def __str__(self):
         return self.mediaId

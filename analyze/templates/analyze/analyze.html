@@ -3,6 +3,10 @@
 {% load static %}
 {% load humanize %}
 
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'analyze/css/load.css' %}">
+{% endblock head %}
+
 {% block content %}
 
     <div class="m-5">
@@ -12,14 +16,40 @@
                 Sort By
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="?id={{ project.id }}&sort=V">Views</a></li>
+                <li><a class="dropdown-item" href="?id={{ project.id }}$sort=V">Views</a></li>
                 <li><a class="dropdown-item" href="?id={{ project.id }}&sort=L">Likes</a></li>
                 <li><a class="dropdown-item" href="?id={{ project.id }}&sort=C">Comments</a></li>
             </ul>
         </div>
-        {% for account in accounts %}
-            <h4>{{ account }}</h4>
-        {% endfor %}
+        <div class="row d-flex justify-content-center h-100">
+            {% for account in accounts %}
+                <div class="card m-2 " style="width:300px">
+                    <img src="{% static 'accounts/profilePictures/'|add:account.account.userId|add:'.png' %}" alt="" class="card-img-top">
+                    <span class="badge bg-primary fs-5">{{ forloop.counter }}</span>
+                    <div class="card-body">
+
+                        <h4 class="text-uppercase fs-3 d-flex justify-content-center">{{ account.account.username }}</h4>
+
+                         {% if sort == "" %}
+                             <h5 class="text-primary fs-4">Views: {{ account.account.views|intcomma }}</h5>
+                             <p class=".text-muted">Likes: {{ account.account.likes|intcomma }}</p>
+                             <p class=".text-muted">Comments: {{ account.account.comments|intcomma }}</p>
+                         {% elif sort == "L" %}
+                             <h5 class="text-primary fs-4">Likes: {{ account.account.likes|intcomma }}</h5>
+                             <p class="text-muted">Views: {{ account.account.views|intcomma }}</p>
+                             <p class="text-muted">Comments: {{ account.account.comments|intcomma }}</p>
+                         {% elif sort == "C" %}
+                             <h5 class="text-primary fs-4">Comments: {{ account.account.comments|intcomma }}</h5>
+                             <p class="text-muted">Likes: {{ account.account.likes|intcomma }}</p>
+                             <p class="text-muted">Views: {{ account.account.views|intcomma }}</p>
+                         {% endif %}
+
+                        <a href="#" class="btn btn-primary">See Profile</a>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock content %}
