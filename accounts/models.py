@@ -7,7 +7,7 @@ import uuid, json
 def idgen():
     return int_to_base36(uuid.uuid4().int)[:20]
 
-
+ 
 # All Accounts Database Model
 class instaAccounts(models.Model):
     username = models.CharField(max_length=30)
