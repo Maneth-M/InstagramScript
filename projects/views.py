@@ -10,9 +10,9 @@ from accounts.models import instaAccounts, media
 from instagrapi import Client
 import requests
 
-
-cl = Client()
-cl.login('lasticebergs', '123AgunamD')
+#
+# cl = Client()
+# cl.login('lasticeberg', '123AgunamD')
 
 
 # Home Page

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'analyze.apps.AnalyzeConfig',
     'accounts.apps.AccountsConfig',
     'projects.apps.ProjectsConfig',
+    'update.apps.UpdateConfig',
     'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -7,9 +7,9 @@ from instagrapi import Client
 import requests
 from django.db.models import Max
 
-
-cl = Client()
-cl.login('lasticebergs', '123AgunamD')
+#
+# cl = Client()
+# cl.login('lasticeberg', '123AgunamD')
 
 
 def analizeAccounts(request):
@@ -113,3 +113,11 @@ def analizeAccounts(request):
         "title": f"{project} - Analyze",
         "sort": sort
     })
+
+
+def analyzeMedia(request):
+    id = request.GET.get('id')
+    project = Project.objects.filter(id=id).first()
+    accounts = projectAccounts.objects.filter(project=project).all()
+
+    return render(request, 'analyze/media.html')
