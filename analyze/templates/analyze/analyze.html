@@ -4,7 +4,7 @@
 {% load humanize %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static 'analyze/css/load.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'analyze/css/mediaCards.css' %}">
 {% endblock head %}
 
 {% block content %}
@@ -37,7 +37,7 @@
 
                         <h4 class="text-uppercase fs-3 d-flex justify-content-center">{{ account.account.username }}</h4>
 
-                         {% if sort == "" %}
+                         {% if sort == "" or sort == "V"%}
                              <h5 class="text-primary fs-4">Views: {{ account.account.views|intcomma }}</h5>
                              <p class=".text-muted">Likes: {{ account.account.likes|intcomma }}</p>
                              <p class=".text-muted">Comments: {{ account.account.comments|intcomma }}</p>

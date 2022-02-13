@@ -149,9 +149,12 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+
+from datetime import timedelta
+
 CELERY_BEAT_SCHEDULE = {
     'task-number-one': {
         'task': 'update.tasks.scheduledTask',
-        'schedule': crontab(minute='*/5')
+        'schedule': timedelta(minutes=5),
     }
 }
