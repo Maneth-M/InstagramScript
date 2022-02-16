@@ -6,168 +6,175 @@
 {% block head %}
     <link
             rel="stylesheet"
-            href="https://unpkg.com/swiper/swiper-bundle.min.css"
+            href="https://unpkg.com/swiper@8/swiper-bundle.min.css"
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-    {% for key, value in charts.items %}
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
-
-            function hex_to_ascii(str1)
-            {
-                var hex  = str1.toString();
-                var str = '';
-                for (var n = 0; n < hex.length; n += 2) {
-                    str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
-                }
-                return str;
-            }
-
-            var values = []
-            var x = {{ value }}
-            values.push([Date, Views])
-            for (var i = 1; i < x.length; i++) {
-                values.push(
-                    [new Date(hex_to_ascii(key)), value]
-                )
-            }
-
-            console.log.(values)
-            function drawChart() {
-                var data = google.visualization.arrayToDataTable(values);
-
-                var options = {
-                    title: 'Analysis',
-                    curveType: 'function',
-                    legend: { position: 'bottom' }
-                };
-
-                var chart = new google.visualization.LineChart(document.getElementById("{{ key }}"));
-
-                chart.draw(data, options);
-            }
-        </script>
-
-    {% endfor %}
+    <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'analyze/css/cards.css' %}">
 {% endblock head %}
 
 {% block content %}
     <div class="m-2">
-        <nav class="navbar navbar-dark bg-dark navbar-fixed-top">
-            <div class="dropdown ms-3">
-                <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Sort By
-                </button>
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=V">Views</a></li>
-                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=L">Likes</a></li>
-                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=C">Comments</a></li>
-                </ul>
+        <div class="container-fluid">
+            <div class="row row-cols-1">
+                {% for media in medias %}
+                    <div class="col d-flex justify-content-center">
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                {% if media.isVideo %}
+                                    <div class="col-md-4 col-sm-12" style="max-height: 400px">
+                                        <div class="h_iframe mt-1 mx-2">
+                                            <iframe allowfullscreen src="{% static 'accounts/media/videos/'|add:media.mediaId|add:'.mp4' %}"></iframe>
+                                        </div>
+                                    </div>
+                                {% elif media.isMultiple %}
+                                    <div class="col-md-4 col-sm-12" style="max-height: 400px; max-width: 400px">
+                                        <div class="swiper mySwiper" >
+                                            <div class="swiper-wrapper" style="max-height: 350px">
+                                                {% for item, value in media.multiItems.items %}
+                                                    {% if value.isVideo %}
+                                                        <div class="swiper-slide">
+                                                            <div class="h_iframe" >
+                                                                <iframe allowfullscreen src="{% static 'accounts/media/videos/'|add:item|add:'.mp4' %}"></iframe>
+                                                            </div>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="swiper-slide" style="width: auto;">
+                                                            <img style="max-height: 300px; max-width: 300px" src="{% static 'accounts/media/images/'|add:item|add:'.png' %}">
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                            </div>
+
+                                            <div class="swiper-button-next"></div>
+                                            <div class="swiper-button-prev"></div>
+                                            <div class="swiper-pagination"></div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4 col-sm-12 d-flex justify-content-center" style="max-height: 350px">
+                                        <div class="">
+                                            <img src="{% static 'accounts/media/images/'|add:media.mediaId|add:'.png' %}" class="img-fluid m-2" style="max-height: 300px">
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Card title</h5>
+                                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-        </nav>
-
-        <div class="container mt-2">
-            {% for media in medias %}
-                <div class="row w-100 border shadow p-3 mb-5 bg-white rounded">
-                    <div class="col-lg-3 col-lg-push-3">
-                        {% if media.isVideo %}
-                            <div style="height: 350px" class="d-flex justify-content-center h-100">
-                                <div class="mx-auto" style="width: auto; max-height: 350px">
-                                    <video style="width: auto; max-height: 350px"  controls autoplay loop src="{% static 'accounts/media/videos/'|add:media.mediaId|add:'.mp4' %}"></video>
-                                </div>
-                            </div>
-                        {% elif media.isMultiple %}
-                            <div class="swiper mySwiper" style="width: 100%">
-                                <div class="swiper-wrapper" style="height: 350px">
-                                    {% for item, value in media.multiItems.items %}
-                                        {% if value.isVideo %}
-                                            <div class="swiper-slide" style="width: auto; max-height: 350px">
-                                                <video style="width: 100%"  controls autoplay loop src="{% static 'accounts/media/videos/'|add:item|add:'.mp4' %}"></video>
-                                            </div>
-                                        {% else %}
-                                            <div class="swiper-slide" style="width: auto; max-height: 350px">
-                                                <img style="width: 100%" src="{% static 'accounts/media/images/'|add:item|add:'.png' %}">
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-
-                                </div>
-
-                                <div class="swiper-button-next"></div>
-                                <div class="swiper-button-prev"></div>
-                                <div class="swiper-pagination"></div>
-                            </div>
-                        {% else %}
-                            <div style="height: 350px" class="d-flex justify-content-center h-100">
-                                <div class="mx-auto" style="width: auto; max-height: 350px">
-                                    <img style="width: 100%" src="{% static 'accounts/media/images/'|add:media.mediaId|add:'.png' %}">
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="col">
-                        <h3>{{ media.user }}</h3>
-                        <div class="row m-1">
-                            <div id="{{ media.mediaId }}" style="width: 95%; height: auto"></div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-3 col-lg-push-3">
-
-                        </div>
-                        {% if media.isVideo %}
-                            <div class="col">
-                                <div class="row">
-                                    <div class="row">
-                                        <h5 class="text-muted">Views: </h5>
-                                    </div>
-                                    <div class="row">
-                                        <h5 class="text-primary">{{ media.views|intcomma }}</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                        <div class="col">
-                            <div class="row">
-                                <div class="row">
-                                    <h5 class="text-muted">Likes: </h5>
-                                </div>
-                                <div class="row">
-                                    <h5 class="text-primary">{{ media.likes|intcomma }}</h5>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="row">
-                                <div class="row">
-                                    <h5 class="text-muted">Comments: </h5>
-                                </div>
-                                <div class="row">
-                                    <h5 class="text-primary">{{ media.comments|intcomma }}</h5>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="row">
-                                <div class="row">
-                                    <h5 class="text-muted">Date Posted: </h5>
-                                </div>
-                                <div class="row">
-                                    <h5 class="text-primary">{{ media.Date|date:"M d, Y" }}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+        </div>
+{##}
+{#        <div class="container mt-2">#}
+{#            {% for media in medias %}#}
+{#                <div class="row w-100 border shadow p-3 mb-5 bg-white rounded">#}
+{#                    <div class="col-lg-3 col-lg-push-3">#}
+{#                        {% if media.isVideo %}#}
+{#                            <div style="height: 350px" class="d-flex justify-content-center h-100">#}
+{#                                <div class="mx-auto" style="width: auto; max-height: 350px">#}
+{#                                    <video style="width: auto; max-height: 350px"  controls autoplay loop src="{% static 'accounts/media/videos/'|add:media.mediaId|add:'.mp4' %}"></video>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        {% elif media.isMultiple %}#}
+{##}
+{#                            #}
+{##}
+{#                            <div class="swiper mySwiper" style="width: 100%">#}
+{#                                <div class="swiper-wrapper" style="height: 350px">#}
+{#                                    {% for item, value in media.multiItems.items %}#}
+{#                                        {% if value.isVideo %}#}
+{#                                            <div class="swiper-slide" style="width: auto; max-height: 350px">#}
+{#                                                <video style="width: 100%"  controls autoplay loop src="{% static 'accounts/media/videos/'|add:item|add:'.mp4' %}"></video>#}
+{#                                            </div>#}
+{#                                        {% else %}#}
+{#                                            <div class="swiper-slide" style="width: auto; max-height: 350px">#}
+{#                                                <img style="width: 100%" src="{% static 'accounts/media/images/'|add:item|add:'.png' %}">#}
+{#                                            </div>#}
+{#                                        {% endif %}#}
+{#                                    {% endfor %}#}
+{##}
+{#                                </div>#}
+{##}
+{#                                <div class="swiper-button-next"></div>#}
+{#                                <div class="swiper-button-prev"></div>#}
+{#                                <div class="swiper-pagination"></div>#}
+{#                            </div>#}
+{#                        {% else %}#}
+{#                            <div style="height: 350px" class="d-flex justify-content-center h-100">#}
+{#                                <div class="mx-auto" style="width: auto; max-height: 350px">#}
+{#                                    <img style="width: 100%" src="{% static 'accounts/media/images/'|add:media.mediaId|add:'.png' %}">#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                    <div class="col">#}
+{#                        <h3>{{ media.user }}</h3>#}
+{#                        <div class="row m-1">#}
+{#                            <div id="curve_chart" style="width: 95%; height: auto"></div>#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{##}
+{#                    <div class="row">#}
+{#                        <div class="col-lg-3 col-lg-push-3">#}
+{##}
+{#                        </div>#}
+{#                        {% if media.isVideo %}#}
+{#                            <div class="col">#}
+{#                                <div class="row">#}
+{#                                    <div class="row">#}
+{#                                        <h5 class="text-muted">Views: </h5>#}
+{#                                    </div>#}
+{#                                    <div class="row">#}
+{#                                        <h5 class="text-primary">{{ media.views|intcomma }}</h5>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        {% endif %}#}
+{#                        <div class="col">#}
+{#                            <div class="row">#}
+{#                                <div class="row">#}
+{#                                    <h5 class="text-muted">Likes: </h5>#}
+{#                                </div>#}
+{#                                <div class="row">#}
+{#                                    <h5 class="text-primary">{{ media.likes|intcomma }}</h5>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{##}
+{#                        <div class="col">#}
+{#                            <div class="row">#}
+{#                                <div class="row">#}
+{#                                    <h5 class="text-muted">Comments: </h5>#}
+{#                                </div>#}
+{#                                <div class="row">#}
+{#                                    <h5 class="text-primary">{{ media.comments|intcomma }}</h5>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{##}
+{#                        <div class="col">#}
+{#                            <div class="row">#}
+{#                                <div class="row">#}
+{#                                    <h5 class="text-muted">Date Posted: </h5>#}
+{#                                </div>#}
+{#                                <div class="row">#}
+{#                                    <h5 class="text-primary">{{ media.Date|date:"M d, Y" }}</h5>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% endfor %}#}
         </div>
 
 

@@ -5,58 +5,65 @@
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'analyze/css/mediaCards.css' %}">
+
+    <script>
+        function showLoading() {
+            document.getElementById('load').style.display = "block";
+            document.getElementById('main').style.display = "none";
+        }
+    </script>
 {% endblock head %}
+
+
+{% block navcontent %}
+    <div class="col">
+        <a  class="btn btn-outline-light me-3" href="/analyze/media/?id={{ project.id }}&" onclick="showLoading()">
+            Analyze Media
+        </a>
+    </div>
+{% endblock %}
 
 {% block content %}
 
-    <div class="m-5">
-        <h1>{{ project }}</h1>
-        <nav class="navbar navbar-dark bg-dark">
-            <div class="dropdown ms-3">
-                <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Sort By
-                </button>
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="?id={{ project.id }}$sort=V">Views</a></li>
-                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=L">Likes</a></li>
-                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=C">Comments</a></li>
-                </ul>
-            </div>
-            <div>
-                <a class="btn btn-outline-light me-3" href="media/?id={{ project.id }}&">
-                    Analyze Media
-                </a>
-            </div>
-        </nav>
-        <div class="row d-flex justify-content-center h-100">
-            {% for account in accounts %}
-                <div class="card m-2 " style="width:300px">
-                    <img src="{% static 'accounts/profilePictures/'|add:account.account.userId|add:'.png' %}" alt="" class="card-img-top">
-                    <span class="badge bg-primary fs-5">{{ forloop.counter }}</span>
-                    <div class="card-body">
+    <div class="m-2" id="main">
+        <h1 class="d-flex justify-content-center text-white mb-4">
+            {{ project }}
+        </h1>
+        <div class="container-fluid p-3">
+            <div class="row d-flex justify-content-center">
+                {% for account in accounts %}
+                    <div class="col col-xs-12 m-4 d-flex justify-content-center">
+                        <div class="card" style="width:300px">
+                            <img src="{% static 'accounts/profilePictures/'|add:account.account.userId|add:'.png' %}" alt="" class="card-img-top">
+                            <span class="badge bg-primary fs-5">{{ forloop.counter }}</span>
+                            <div class="card-body">
 
-                        <h4 class="text-uppercase fs-3 d-flex justify-content-center">{{ account.account.username }}</h4>
+                                <h4 class="text-uppercase fs-3 d-flex justify-content-center">{{ account.account.username }}</h4>
 
-                         {% if sort == "" or sort == "V"%}
-                             <h5 class="text-primary fs-4">Views: {{ account.account.views|intcomma }}</h5>
-                             <p class=".text-muted">Likes: {{ account.account.likes|intcomma }}</p>
-                             <p class=".text-muted">Comments: {{ account.account.comments|intcomma }}</p>
-                         {% elif sort == "L" %}
-                             <h5 class="text-primary fs-4">Likes: {{ account.account.likes|intcomma }}</h5>
-                             <p class="text-muted">Views: {{ account.account.views|intcomma }}</p>
-                             <p class="text-muted">Comments: {{ account.account.comments|intcomma }}</p>
-                         {% elif sort == "C" %}
-                             <h5 class="text-primary fs-4">Comments: {{ account.account.comments|intcomma }}</h5>
-                             <p class="text-muted">Likes: {{ account.account.likes|intcomma }}</p>
-                             <p class="text-muted">Views: {{ account.account.views|intcomma }}</p>
-                         {% endif %}
+                                {% if sort == "" or sort == "V"%}
 
-                        <a href="#" class="btn btn-primary">See Profile</a>
+                                    <h5 class="text-primary fs-4">Views: {{ account.account.views|intcomma }}</h5>
+                                    <p class=".text-muted">Likes: {{ account.account.likes|intcomma }}</p>
+                                    <p class=".text-muted">Comments: {{ account.account.comments|intcomma }}</p>
+                                {% elif sort == "L" %}
+                                    <h5 class="text-primary fs-4">Likes: {{ account.account.likes|intcomma }}</h5>
+                                    <p class="text-muted">Views: {{ account.account.views|intcomma }}</p>
+                                    <p class="text-muted">Comments: {{ account.account.comments|intcomma }}</p>
+                                {% elif sort == "C" %}
+                                    <h5 class="text-primary fs-4">Comments: {{ account.account.comments|intcomma }}</h5>
+                                    <p class="text-muted">Likes: {{ account.account.likes|intcomma }}</p>
+                                    <p class="text-muted">Views: {{ account.account.views|intcomma }}</p>
+                                {% endif %}
+
+                                <a href="#" class="btn btn-primary">See Profile</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
-
+    <div class="loader" id="load" style="display: none">
+        Analyzing...
+    </div>
 {% endblock content %}

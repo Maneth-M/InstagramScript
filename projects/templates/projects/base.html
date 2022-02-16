@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 {% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 {% load static %}
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     {% bootstrap_messages %}
-    <link rel="stylesheet" type="text/css" href="{% static 'projects/main.css' %}">
 
+    <link rel="stylesheet" type="text/css" href="{% static 'projects/main.css' %}">
     {% block head %}
         {% if title %}
             <title>{{ title }}</title>
@@ -21,7 +23,30 @@
 
 </head>
 <body>
+    <div class="m-2">
+        <nav class="navbar navbar-dark bg-dark mt-3">
+            <div class="dropdown ms-3">
+                <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Sort By
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=V">Views</a></li>
+                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=L">Likes</a></li>
+                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=C">Comments</a></li>
+                </ul>
+            </div>
+            <div class="">
+                <div class="row">
+                    {% block navcontent %}
+                    {% endblock %}
+                </div>
+            </div>
+        </nav>
+    </div>
     {% block content %}
     {% endblock %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,54 @@
+{% extends "projects/base.html" %}
+{% load bootstrap5 %}
+{% load static %}
+{% block content %}
+
+
+    <div class="container">
+        <div class="row ">
+            <h2 class="text-center mt-2 text-uppercase p-3 text-white">Your Projects</h2>
+        </div>
+
+        {#          Display Exsisting Projects#}
+
+        {% if project_id %}
+            <div class="row row-cols-3 d-flex justify-content-center mx-1">
+                {% for project in project_id %}
+                    <div class="col card m-5" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title text-uppercase h3">
+                                {{ project.name }}
+                            </h5>
+                            <div>
+                                <h5 class="text-truncate my-3">
+                                {% for account in project.projectaccounts_set.all %}
+                                    {{ account }},
+                                {% endfor %}
+                                </h5>
+                                {% if not project.projectaccounts_set.all %}
+                                    <legend>Empty</legend>
+                                {% endif %}
+                            </div>
+                            <p class="text-muted">
+                                Accounts Left:
+                                <p>
+                                    {{ project.size }}
+                                </p>
+                            </p>
+                            <a href="?id={{ project.id }}" class="btn btn-primary stretched-link sticky-bottom">View Project</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {#          if no projects are created#}
+
+        {% else %}
+            <div>
+                <h2>
+                    Sorry You don't have any projects yet
+                </h2>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

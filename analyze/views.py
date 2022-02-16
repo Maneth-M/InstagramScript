@@ -145,5 +145,5 @@ def analyzeMedia(request):
         "medias": media,
         "sort": sort,
         "project": project,
-        "charts": charts
+
     })

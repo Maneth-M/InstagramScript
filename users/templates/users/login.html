@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-    <div class="h-100 d-flex justify-content-center align-items-center mt-5 ">
+    <div class="h-100 d-flex justify-content-center align-items-center mt-5 text-white">
         <form method="POST">
             <fieldset>
                 <legend class="border-bottom mb-4">login</legend>
@@ -11,12 +11,12 @@
                 {{ form|crispy }}
             </fieldset>
 
-            <button class="btn btn-outline-dark" type="submit">
+            <button class="btn btn-outline-light" type="submit">
                 Sign in
             </button>
         </form>
     </div>
-    <div class="h-100 d-flex justify-content-center align-items-center mt-5 ">
+    <div class="h-100 d-flex justify-content-center align-items-center mt-5 text-white">
         <small>
             Need an Account? <a href="{% url 'register' %}">Sign Up</a>
         </small>

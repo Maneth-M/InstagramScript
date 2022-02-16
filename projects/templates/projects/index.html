@@ -1,37 +1,47 @@
 {% extends "projects/base.html" %}
 {% load bootstrap5 %}
+
 {% block content %}
 
-{#Welcome Message#}
-    <div>
-        <h1>Welcome {{ user.username }}</H1>
-    </div>
+    <div class="m-5">
+    {#Welcome Message#}
+        <div class="text-center mt-2 text-uppercase p-3 text-white">
+            <h1>Welcome, {{ user.username }}</H1>
+        </div>
 
-{#Create a new Project#}
-    <div>
-        <fieldset>
-            <a class="btn btn-outline-dark" href="{% url 'new-project' %}">Create Project</a>
-        </fieldset>
+    {#Create a new Project#}
+        <div class="container">
+            <div class="row d-flex justify-content-center h-100">
+                <div class="col d-flex justify-content-center">
+                    <a class="btn btn-outline-light" href="{% url 'new-project' %}">➕ Create Project</a>
+                </div>
+
+                <div class="col d-flex justify-content-center">
+                    <a class="btn btn-outline-light" href="{% url 'my-projects' %}">Your Projects</a>
+                </div>
+            </div>
+
+        </div>
     </div>
 
 {#Display Exsisting Projects#}
-    <div>
-        {% if project_id %}
-        <div>
-            {% for project in project_id %}
-                <h2>
-                    <a href="?id={{ project.id }}">{{ project.name }}</a>
-                </h2>
-            {% endfor %}
-        </div>
+{#    <div>#}
+{#        {% if project_id %}#}
+{#        <div>#}
+{#            {% for project in project_id %}#}
+{#                <h2>#}
+{#                    <a href="?id={{ project.id }}">{{ project.name }}</a>#}
+{#                </h2>#}
+{#            {% endfor %}#}
+{#        </div>#}
 
 {#if no projects are created#}
-        {% else %}
-        <div>
-            <h2>
-                Sorry You don't have any projects yet
-            </h2>
-        </div>
-        {% endif %}
-    </div>
+{#        {% else %}#}
+{#        <div>#}
+{#            <h2>#}
+{#                Sorry You don't have any projects yet#}
+{#            </h2>#}
+{#        </div>#}
+{#        {% endif %}#}
+{#    </div>#}
 {% endblock content %}
