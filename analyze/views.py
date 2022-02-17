@@ -158,3 +158,5 @@ def account(request):
     id = request.GET.get('id', '')
     acc = request.GET.get('acc', '')
     account = instaAccounts.objects.filter(userId=acc).first()
+
+    return render(request, 'analyze/account.html', {'account': account})

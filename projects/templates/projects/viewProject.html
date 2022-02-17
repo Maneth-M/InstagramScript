@@ -144,8 +144,8 @@
             {% if accounts %}
                 {% for account in accounts %}
                     <div class="col m-3 d-flex justify-content-center">
-                        <a href="www.google.com" class="hidden stretched-link"></a>
                         <div class="card">
+                            <a href="analyze/account/?id={{ id }}&acc={{ account.userId }}" class="hidden stretched-link"></a>
                             <img src="{% static 'accounts/profilePictures/'|add:account.account.userId|add:'.png' %}" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h2>{{ account.account.username }}</h2>

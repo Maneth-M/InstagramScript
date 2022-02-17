@@ -61,9 +61,12 @@
                                 <div class="col-md-8 col-sm-6 col-xs-6 p-2">
                                     <div class="row m-2 border shadow bg-dark rounded">
                                         <div class="col my-auto">
-                                            <h3 class="fw-bold" style="color: #c22525">
-                                                {{ media.user }}
-                                            </h3>
+                                            <a class="text-decoration-none" href="/projects/analyze/account/?acc={{ media.user.userId }}">
+                                                <h3 class="fw-bold" style="color: #c22525">
+                                                    {{ media.user }}
+                                                </h3>
+                                            </a>
+
                                         </div>
                                         <div class="col">
                                             <h5 class="text-muted">
