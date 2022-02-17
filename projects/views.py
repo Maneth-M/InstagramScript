@@ -12,7 +12,7 @@ import requests
 
 #
 cl = Client()
-cl.login('daily__ports', 'Buttercup@1234')
+cl.login('lasticebergs', '123AgunamD')
 
 
 # Home Page
@@ -143,54 +143,8 @@ def new(request):
     return render(request, "projects/new.html", {"form": NewProject})
 
 
-def displayAccounts(request):
+def index(request):
     if request.user.is_authenticated:
-        id = request.GET.get('id', '')
-        key = request.GET.get('key', '').lower()
-        check = ""
-        result = ''
-
-        if not id == "":
-            project = Project.objects.filter(id=id).first()
-            if request.method == "GET":
-                if not len(key) == 0:
-                    check = instaAccounts.objects.filter(username=key.lower()).first()
-                    if check is not None:
-                        check = instaAccounts.objects.filter(username=key.lower()).first().projectaccounts_set.filter(project=project).first()
-                        if check == None:
-                            result = instaAccounts.objects.filter(username=key.lower()).first()
-                            accs = projectAccounts.objects.filter(project=project).all()
-                            return render(
-                                request,
-                                "projects/viewProject.html",
-                                {
-                                    'project': project,
-                                    "results": result,
-                                    'id': id,
-                                    'accounts': accs,
-                                    'check': check
-                                }
-                            )
-
-
-            elif project.size <= 0 :
-                messages.error(request, f"You have {project.size} Accounts Left")
-
-            accs = projectAccounts.objects.filter(project=project).all()
-
-
-            return render(
-                request,
-                "projects/viewProject.html",
-                {
-                    'project': project,
-                    "results": result,
-                    'id': id,
-                    'accounts': accs,
-                    'check': check
-                }
-            )
-
-
+        return render(request, "projects/index.html")
     else:
         return redirect('login')

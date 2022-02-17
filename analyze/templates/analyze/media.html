@@ -2,6 +2,7 @@
 {% load bootstrap5 %}
 {% load static %}
 {% load humanize %}
+{% load parse_iso %}
 
 {% block head %}
     <link
@@ -20,9 +21,9 @@
             <div class="row row-cols-1" >
                 {% for media in medias %}
                     <div class="col m-2 d-flex justify-content-center">
-                        <div style="background: #ebfef3; max-height: 400px; width: 80%; min-height: 350px">
+                        <div style="background: #041c32; max-height: 400px; width: 80%; min-height: 350px">
                             <div class="row">
-                                <div class="col-md-4 col-sm-6 col-xs-12 d-flex justify-content-center shadow rounded bg-white">
+                                <div class="col-md-4 col-sm-6 col-xs-6 d-flex justify-content-center shadow rounded" style="background-color: #04293a">
                                     {% if media.isVideo %}
                                         <div class="h_iframe mt-1 mx-2">
                                             <iframe style="min-height: 350px; max-width: 100%" allowfullscreen src="{% static 'accounts/media/videos/'|add:media.mediaId|add:'.mp4' %}"></iframe>
@@ -58,7 +59,12 @@
                                 </div>
 
                                 <div class="col-md-8 col-sm-6 col-xs-6 p-2">
-                                    <div class="row m-2 border shadow bg-white rounded">
+                                    <div class="row m-2 border shadow bg-dark rounded">
+                                        <div class="col my-auto">
+                                            <h3 class="fw-bold" style="color: #c22525">
+                                                {{ media.user }}
+                                            </h3>
+                                        </div>
                                         <div class="col">
                                             <h5 class="text-muted">
                                                 Comments
@@ -90,6 +96,30 @@
                                             <h4 class="text-primary">
                                                 {{ media.Date|date:"M d, Y" }}
                                             </h4>
+                                        </div>
+                                    </div>
+                                    <div class="row m-2 border shadow bg-dark rounded">
+                                        <div style="max-height: 250px; overflow: scroll">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr style="color: #75acc4">
+                                                        <th  scope="col">Date</th>
+                                                        <th scope="col">Views</th>
+                                                        <th scope="col">Likes</th>
+                                                        <th scope="col">Comments</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="color: #ecb365">
+                                                    {% for key, item in media.dataIn.items %}
+                                                    <tr>
+                                                        <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
+                                                        <td>{{ item.views|intcomma }}</td>
+                                                        <td>{{ item.likes|intcomma }}</td>
+                                                        <td>{{ item.comments|intcomma }}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>

@@ -9,8 +9,13 @@ from django.db.models import Max
 
 
 cl = Client()
-cl.login('lasticeberg', '123AgunamD')
+cl.login('lasticebergs', '123AgunamD')
 
+def checkLikes(likes):
+    if int(likes) < 0:
+        return "hidden"
+    else:
+        return likes
 
 def analizeAccounts(request):
     id = request.GET.get('id')
@@ -81,7 +86,7 @@ def analizeAccounts(request):
                             isPhoto=isPhoto,
                             isMultiple=isMultiple,
                             multiItems=multiItems,
-                            likes=item.like_count,
+                            likes=checkLikes(item.like_count),
                             comments=item.comment_count,
                             views=item.view_count,
                             Date=item.taken_at
@@ -147,3 +152,9 @@ def analyzeMedia(request):
         "project": project,
 
     })
+
+
+def account(request):
+    id = request.GET.get('id', '')
+    acc = request.GET.get('acc', '')
+    account = instaAccounts.objects.filter(userId=acc).first()

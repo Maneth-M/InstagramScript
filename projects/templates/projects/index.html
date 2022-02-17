@@ -17,31 +17,11 @@
                 </div>
 
                 <div class="col d-flex justify-content-center">
-                    <a class="btn btn-outline-light" href="{% url 'my-projects' %}">Your Projects</a>
+                    <a class="btn btn-outline-light" href="{% url 'home' %}">Your Projects</a>
                 </div>
             </div>
 
         </div>
     </div>
 
-{#Display Exsisting Projects#}
-{#    <div>#}
-{#        {% if project_id %}#}
-{#        <div>#}
-{#            {% for project in project_id %}#}
-{#                <h2>#}
-{#                    <a href="?id={{ project.id }}">{{ project.name }}</a>#}
-{#                </h2>#}
-{#            {% endfor %}#}
-{#        </div>#}
-
-{#if no projects are created#}
-{#        {% else %}#}
-{#        <div>#}
-{#            <h2>#}
-{#                Sorry You don't have any projects yet#}
-{#            </h2>#}
-{#        </div>#}
-{#        {% endif %}#}
-{#    </div>#}
 {% endblock content %}
