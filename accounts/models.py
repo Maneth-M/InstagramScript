@@ -24,6 +24,8 @@ class instaAccounts(models.Model):
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     comments = models.IntegerField(default=0)
+    hashtags = models.TextField(default=" ")
+    bio = models.TextField(default=" ")
 
     def __str__(self):
         return self.username
@@ -37,15 +39,16 @@ class media(models.Model):
     isPhoto = models.BooleanField(default=False)
     isMultiple = models.BooleanField(default=False)
     multiItems = models.JSONField(default=dict)
-    likes = models.IntegerField(max_length=20, default="")
-    comments = models.IntegerField(max_length=20, default="")
-    views = models.IntegerField(max_length=20, default="")
+    likes = models.IntegerField(default=0)
+    comments = models.IntegerField(default=0)
+    views = models.IntegerField(default=0)
     dataIn = models.JSONField(default=dict)
     likeIn = models.JSONField(default=dict)
     commentsIn = models.JSONField(default=dict)
     viewsIn = models.JSONField(default=dict)
     Date = models.DateTimeField(default=timezone.now)
-
+    hashtags = models.TextField(default=" ")
+    caption = models.TextField(default=" ")
 
     def __str__(self):
         return self.mediaId

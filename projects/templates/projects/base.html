@@ -21,21 +21,17 @@
 </head>
 <body>
     <div class="m-2">
-        <nav class="navbar navbar-dark bg-dark mt-3">
-            <div class="dropdown ms-3">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Sort By
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=V">Views</a></li>
-                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=L">Likes</a></li>
-                    <li><a class="dropdown-item" href="?id={{ project.id }}&sort=C">Comments</a></li>
-                </ul>
-            </div>
-            <div class="">
-                <div class="row">
-                    {% block navcontent %}
-                    {% endblock %}
+        <nav class="navbar navbar-dark navbar-expand-lg bg-dark mt-3">
+            <div class="container-fluid">
+                <a href="/" class="navbar-brand">Home</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% block navcontent %}
+                        {% endblock %}
+                    </ul>
                 </div>
             </div>
         </nav>

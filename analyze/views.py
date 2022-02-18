@@ -8,8 +8,9 @@ import requests
 from django.db.models import Max
 
 
+#
 cl = Client()
-cl.login('lasticebergs', '123AgunamD')
+cl.login('lasticeberg', '123AgunamD')
 
 def checkLikes(likes):
     if int(likes) < 0:
@@ -31,6 +32,8 @@ def analizeAccounts(request):
                 medias = cl.user_medias(account.account.userId, 10)
 
                 for item in medias:
+                    if Media.objects.filter(mediaId=item.pk).exists():
+                        continue
                     if item.media_type == 2:
                         mType = 'video'
                     elif item.media_type == 8:
@@ -78,6 +81,10 @@ def analizeAccounts(request):
                     else:
                         isMultiple = False
                     checkL = Media.objects.filter(mediaId=item.pk).first()
+                    hashtags = ""
+                    for word in str(item.caption_text).split():
+                        if word[0] == "#":
+                            hashtags = f"{hashtags}{word} "
                     if checkL == None:
                         Media(
                             mediaId=item.pk,
@@ -89,8 +96,13 @@ def analizeAccounts(request):
                             likes=checkLikes(item.like_count),
                             comments=item.comment_count,
                             views=item.view_count,
-                            Date=item.taken_at
+                            Date=item.taken_at,
+                            hashtags=hashtags,
+                            caption=item.caption_text
                         ).save()
+
+                        account.account.hashtags = account.account.hashtags + hashtags
+                        account.account.save()
 
         accounts = projectAccounts.objects.filter(project=project).all()
 
@@ -158,5 +170,8 @@ def account(request):
     id = request.GET.get('id', '')
     acc = request.GET.get('acc', '')
     account = instaAccounts.objects.filter(userId=acc).first()
-
-    return render(request, 'analyze/account.html', {'account': account})
+    medias = Media.objects.filter(user=acc).all()
+    return render(request, 'analyze/account.html', {
+        'account': account,
+        'medias': medias
+    })

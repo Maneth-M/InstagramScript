@@ -61,6 +61,11 @@ def scheduledTask():
 
                     else:
                         isMultiple = False
+
+                    hashtags = ""
+                    for word in str(media.caption_text).split():
+                        if word[0] == "#":
+                            hashtags = f"{hashtags}{word} "
                     Media(
                         mediaId=media.pk,
                         user=account,
@@ -71,8 +76,13 @@ def scheduledTask():
                         likes=checkLikes(media.like_count),
                         comments=media.comment_count,
                         views=media.view_count,
-                        Date=media.taken_at
+                        Date=media.taken_at,
+                        hashtags=hashtags,
+                        caption=media.caption_text
                     ).save()
+
+                    account.hashtags = account.hashtags + hashtags
+                    account.save()
 
 
 @task

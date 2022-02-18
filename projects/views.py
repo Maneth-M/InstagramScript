@@ -12,7 +12,7 @@ import requests
 
 #
 cl = Client()
-cl.login('lasticebergs', '123AgunamD')
+cl.login('lasticeberg', '123AgunamD')
 
 
 # Home Page
@@ -64,7 +64,8 @@ def home(request):
                                 category=result['category_name'],
                                 followers=followers,
                                 following=following,
-                                media=posts
+                                media=posts,
+                                bio=result['biography']
                             ).save()
 
                         except Exception as e:

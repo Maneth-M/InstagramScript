@@ -21,16 +21,23 @@
 {% endblock %}
 
 {% block navcontent %}
-    <div class="col">
-        <a  class="btn btn-outline-light me-3" href="analyze/media/?id={{ project.id }}&" onclick="showLoading()">
-            Analyze Media
-        </a>
-    </div>
-    <div class="col">
-        <a class="btn btn-outline-light me-3" href="analyze/?id={{ id }}" onclick="showLoading()">
+    <li class="nav-item">
+        <a  class="nav-link" href="/projects/analyze/?id={{ project.id }}" onclick="showLoading()">
             Analyze Accounts
         </a>
-    </div>
+    </li>
+
+    <li class="nav-item">
+        <a  class="nav-link" href="media/?id={{ project.id }}&" onclick="showLoading()">
+            Analyze Media
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a  class="nav-link" href="/hashtags" onclick="showLoading()">
+            Hashtag Generator
+        </a>
+    </li>
 {% endblock %}
 
 {% block content %}
@@ -145,7 +152,7 @@
                 {% for account in accounts %}
                     <div class="col m-3 d-flex justify-content-center">
                         <div class="card">
-                            <a href="analyze/account/?id={{ id }}&acc={{ account.userId }}" class="hidden stretched-link"></a>
+                            <a href="analyze/account/?id={{ id }}&acc={{ account.account.userId }}" class="hidden stretched-link"></a>
                             <img src="{% static 'accounts/profilePictures/'|add:account.account.userId|add:'.png' %}" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h2>{{ account.account.username }}</h2>

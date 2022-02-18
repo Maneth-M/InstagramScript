@@ -1,10 +1,18 @@
-from instagrapi import Client
-import requests
+# from instagrapi import Client
+# import requests
+#
+#
+# cl = Client()
+# cl.login('lasticeberg', '123AgunamD')
+#
+# medias = cl.user_info(25025320)
+#
+# print(medias)
 
+from ritetag import RiteTagApi
 
-cl = Client()
-cl.login('lasticeberg', '123AgunamD')
+access_token = 'faf974206ee83580738f10f28f670e6a2a6fddf73c40'
+client = RiteTagApi(access_token)
 
-medias = cl.user_info(25025320)
+x = client.hashtag_suggestion_for_image("http://127.0.0.1:8000/hashtags/")
 
-print(medias)

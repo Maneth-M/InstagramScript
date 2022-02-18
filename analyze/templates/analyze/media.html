@@ -9,148 +9,185 @@
             rel="stylesheet"
             href="https://unpkg.com/swiper@8/swiper-bundle.min.css"
     />
+    <link rel="stylesheet" type="text/css" href="{% static 'analyze/css/mediaCards.css' %}">
 
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'analyze/css/cards.css' %}">
+    <script>
+        function showLoading() {
+            document.getElementById('load').style.display = "block";
+            document.getElementById('main').style.display = "none";
+        }
+    </script>
 {% endblock head %}
 
+{% block navcontent %}
+    <li class="nav-item">
+        <a  class="nav-link" href="/projects/analyze/?id={{ project.id }}" onclick="showLoading()">
+            Analyze Accounts
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a  class="nav-link" href="/hashtags" onclick="showLoading()">
+            Hashtag Generator
+        </a>
+    </li>
+{% endblock %}
+
 {% block content %}
-    <div class="m-2">
-
-        <div class="container-fluid">
-            <div class="row row-cols-1" >
-                {% for media in medias %}
-                    <div class="col m-2 d-flex justify-content-center">
-                        <div style="background: #041c32; max-height: 400px; width: 80%; min-height: 350px">
-                            <div class="row">
-                                <div class="col-md-4 col-sm-6 col-xs-6 d-flex justify-content-center shadow rounded" style="background-color: #04293a">
-                                    {% if media.isVideo %}
-                                        <div class="h_iframe mt-1 mx-2">
-                                            <iframe style="min-height: 350px; max-width: 100%" allowfullscreen src="{% static 'accounts/media/videos/'|add:media.mediaId|add:'.mp4' %}"></iframe>
-                                        </div>
-
-                                    {% elif media.isMultiple %}
-                                        <div class="swiper mySwiper ">
-                                            <div class="swiper-wrapper p-2" style="max-height: 350px">
-                                                {% for item, value in media.multiItems.items %}
-                                                    {% if value.isVideo %}
-                                                        <div class="swiper-slide">
-                                                            <div class="h_iframe" >
-                                                                <iframe style="min-height: 350px; max-width: 100%" allowfullscreen src="{% static 'accounts/media/videos/'|add:item|add:'.mp4' %}"></iframe>
-                                                            </div>
-                                                        </div>
-                                                    {% else %}
-                                                        <div class="swiper-slide" style="width: auto; ">
-                                                            <img style="max-width: 100%" src="{% static 'accounts/media/images/'|add:item|add:'.png' %}">
-                                                        </div>
-                                                    {% endif %}
-                                                {% endfor %}
+    <div class="container-fluid" id="main">
+        <div class="m-2">
+            <div class="container-fluid d-flex justify-content-center">
+                <div class="dropdown">
+                    <button class="dropdown-toggle btn btn-outline-light" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Sort By
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li><a class="dropdown-item" href="?id={{ project.id }}&sort=V">Views</a></li>
+                        <li><a class="dropdown-item" href="?id={{ project.id }}&sort=L">Likes</a></li>
+                        <li><a class="dropdown-item" href="?id={{ project.id }}&sort=C">Comments</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row row-cols-1" >
+                    {% for media in medias %}
+                        <div class="col m-2 d-flex justify-content-center">
+                            <div style="background: #041c32; max-height: 400px; width: 80%; min-height: 350px">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-6 col-xs-6 d-flex justify-content-center shadow rounded" style="background-color: #04293a">
+                                        {% if media.isVideo %}
+                                            <div class="h_iframe mt-1 mx-2">
+                                                <iframe style="min-height: 350px; max-width: 100%" allowfullscreen src="{% static 'accounts/media/videos/'|add:media.mediaId|add:'.mp4' %}"></iframe>
                                             </div>
 
-                                            <div class="swiper-button-next"></div>
-                                            <div class="swiper-button-prev"></div>
-                                            <div class="swiper-pagination"></div>
-                                        </div>
-                                    {% else %}
-                                        <div class="p-2 d-flex justify-content-center">
-                                            <img style="max-height: 350px; max-width: 100%; " src="{% static 'accounts/media/images/'|add:media.mediaId|add:'.png' %}"  >
-                                        </div>
-                                    {% endif %}
-                                </div>
-
-                                <div class="col-md-8 col-sm-6 col-xs-6 p-2">
-                                    <div class="row m-2 border shadow bg-dark rounded">
-                                        <div class="col my-auto">
-                                            <a class="text-decoration-none" href="/projects/analyze/account/?acc={{ media.user.userId }}">
-                                                <h3 class="fw-bold" style="color: #c22525">
-                                                    {{ media.user }}
-                                                </h3>
-                                            </a>
-
-                                        </div>
-                                        <div class="col">
-                                            <h5 class="text-muted">
-                                                Comments
-                                            </h5>
-                                            <h4 class="text-primary">
-                                                {{ media.comments|intcomma }}
-                                            </h4>
-                                        </div>
-                                        <div class="col">
-                                            <h5 class="text-muted">
-                                                Views
-                                            </h5>
-                                            <h4 class="text-primary">
-                                                {{ media.views|intcomma }}
-                                            </h4>
-                                        </div>
-                                        <div class="col">
-                                            <h5 class="text-muted">
-                                                Likes
-                                            </h5>
-                                            <h4 class="text-primary">
-                                                {{ media.likes|intcomma }}
-                                            </h4>
-                                        </div>
-                                        <div class="col">
-                                            <h5 class="text-muted">
-                                                Date Posted
-                                            </h5>
-                                            <h4 class="text-primary">
-                                                {{ media.Date|date:"M d, Y" }}
-                                            </h4>
-                                        </div>
-                                    </div>
-                                    <div class="row m-2 border shadow bg-dark rounded">
-                                        <div style="max-height: 250px; overflow: scroll">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr style="color: #75acc4">
-                                                        <th  scope="col">Date</th>
-                                                        <th scope="col">Views</th>
-                                                        <th scope="col">Likes</th>
-                                                        <th scope="col">Comments</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody style="color: #ecb365">
-                                                    {% for key, item in media.dataIn.items %}
-                                                    <tr>
-                                                        <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
-                                                        <td>{{ item.views|intcomma }}</td>
-                                                        <td>{{ item.likes|intcomma }}</td>
-                                                        <td>{{ item.comments|intcomma }}</td>
-                                                    </tr>
+                                        {% elif media.isMultiple %}
+                                            <div class="swiper mySwiper ">
+                                                <div class="swiper-wrapper p-2" style="max-height: 350px">
+                                                    {% for item, value in media.multiItems.items %}
+                                                        {% if value.isVideo %}
+                                                            <div class="swiper-slide">
+                                                                <div class="h_iframe" >
+                                                                    <iframe style="min-height: 350px; max-width: 100%" allowfullscreen src="{% static 'accounts/media/videos/'|add:item|add:'.mp4' %}"></iframe>
+                                                                </div>
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="swiper-slide" style="width: auto; ">
+                                                                <img style="max-width: 100%" src="{% static 'accounts/media/images/'|add:item|add:'.png' %}">
+                                                            </div>
+                                                        {% endif %}
                                                     {% endfor %}
-                                                </tbody>
-                                            </table>
+                                                </div>
+
+                                                <div class="swiper-button-next"></div>
+                                                <div class="swiper-button-prev"></div>
+                                                <div class="swiper-pagination"></div>
+                                            </div>
+                                        {% else %}
+                                            <div class="p-2 d-flex justify-content-center">
+                                                <img style="max-height: 350px; max-width: 100%; " src="{% static 'accounts/media/images/'|add:media.mediaId|add:'.png' %}"  >
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-md-8 col-sm-6 col-xs-6 p-2">
+                                        <div class="row m-2 border shadow bg-dark rounded">
+                                            <div class="col my-auto">
+                                                <a class="text-decoration-none" href="/projects/analyze/account/?acc={{ media.user.userId }}">
+                                                    <h3 class="fw-bold" style="color: #c22525">
+                                                        {{ media.user }}
+                                                    </h3>
+                                                </a>
+
+                                            </div>
+                                            <div class="col">
+                                                <h5 class="text-muted">
+                                                    Comments
+                                                </h5>
+                                                <h4 class="text-primary">
+                                                    {{ media.comments|intcomma }}
+                                                </h4>
+                                            </div>
+                                            <div class="col">
+                                                <h5 class="text-muted">
+                                                    Views
+                                                </h5>
+                                                <h4 class="text-primary">
+                                                    {{ media.views|intcomma }}
+                                                </h4>
+                                            </div>
+                                            <div class="col">
+                                                <h5 class="text-muted">
+                                                    Likes
+                                                </h5>
+                                                <h4 class="text-primary">
+                                                    {{ media.likes|intcomma }}
+                                                </h4>
+                                            </div>
+                                            <div class="col">
+                                                <h5 class="text-muted">
+                                                    Date Posted
+                                                </h5>
+                                                <h4 class="text-primary">
+                                                    {{ media.Date|date:"M d, Y" }}
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <div class="row m-2 border shadow bg-dark rounded">
+                                            <div style="max-height: 250px; overflow: scroll">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr style="color: #75acc4">
+                                                            <th  scope="col">Date</th>
+                                                            <th scope="col">Views</th>
+                                                            <th scope="col">Likes</th>
+                                                            <th scope="col">Comments</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody style="color: #ecb365">
+                                                        {% for key, item in media.dataIn.items %}
+                                                        <tr>
+                                                            <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
+                                                            <td>{{ item.views|intcomma }}</td>
+                                                            <td>{{ item.likes|intcomma }}</td>
+                                                            <td>{{ item.comments|intcomma }}</td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
-
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
 
 
-        </div>
+            </div>
 
 
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
-    <!-- Initialize Swiper -->
-    <script>
-        var swiper = new Swiper(".mySwiper", {
-            pagination: {
-                el: ".swiper-pagination",
-                type: "progressbar",
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-        });
-    </script>
+        <!-- Initialize Swiper -->
+        <script>
+            var swiper = new Swiper(".mySwiper", {
+                pagination: {
+                    el: ".swiper-pagination",
+                    type: "progressbar",
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            });
+        </script>
+    </div>
+    <div class="loader" id="load" style="display: none">
+        Analyzing...
+    </div>
 {% endblock content %}

@@ -1,6 +1,15 @@
 {% extends "projects/base.html" %}
 {% load bootstrap5 %}
 
+
+{% block navcontent %}
+    <li class="nav-item">
+        <a  class="nav-link" href="/hashtags" onclick="showLoading()">
+            Hashtag Generator
+        </a>
+    </li>
+{% endblock %}
+
 {% block content %}
 
     <div class="m-5">

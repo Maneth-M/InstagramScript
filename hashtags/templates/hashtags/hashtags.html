@@ -1,0 +1,80 @@
+{% extends "projects/base.html" %}
+{% load bootstrap5 %}
+{% load static %}
+{% load humanize %}
+{% load parse_iso %}
+
+
+{% block head %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'hashtags/css/search.css' %}">
+
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row p-5">
+            <div class="col">
+                <h2 class="text-center text-light shadow" style="color: #63175a">
+                    #Hashtags Generator
+                </h2>
+            </div>
+        </div>
+        <div class="row p-3">
+            <div class="card bg-secondary">
+                <div class="form">
+                    <form method="POST" class="search-bar" style="max-width: 100%">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <input class="form-check-input" type="radio" name="txt" checked>
+                                <label class="form-check-label ms-2" for="flexRadioDefault1">
+                                    Hashtags Generated for text
+                                </label>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <input class="form-check-input" type="radio" name="img">
+                                <label class="form-check-label ms-2" for="flexRadioDefault1">
+                                    Hashtags Generated for image
+                                </label>
+
+                            </div>
+                            <div class="col-6 d-flex justify-content-center align-items-center">
+                                <input id="tinput" type="search" name="wrd" placeholder="Text or Image Link" required>
+                                <button class="search-btn" type="submit">
+                                    <span>Search</span>
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row p-5">
+            <div class="col">
+                <div class="d-flex justify-content-center border">
+                    {% if data %}
+                        <div class="row row-cols-5 p-3">
+                            {% for item in data %}
+
+                                <div class="col">
+                                    <h5 class="text-light">
+                                        #{{ item.hashtag }}&nbsp;
+                                    </h5>
+                                </div>
+
+
+                            {% endfor %}
+                        </div>
+
+                    {% else %}
+                        <p class="text-warning">
+                            Invalid Input
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

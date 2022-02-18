@@ -1,9 +1,16 @@
 {% extends "projects/base.html" %}
 {% load bootstrap5 %}
 {% load static %}
+
+
+{% block navcontent %}
+    <li class="nav-item">
+        <a  class="nav-link" href="/hashtags" onclick="showLoading()">
+            Hashtag Generator
+        </a>
+    </li>
+{% endblock %}
 {% block content %}
-
-
     <div class="container">
         <div class="row ">
             <h2 class="text-center mt-2 text-uppercase p-3 text-white">Your Projects</h2>
