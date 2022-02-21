@@ -12,7 +12,7 @@ import requests
 
 #
 cl = Client()
-cl.login('lasticeberg', '123AgunamD')
+cl.login('lasticebergs', '123AgunamD')
 
 
 # Home Page
@@ -42,7 +42,7 @@ def home(request):
                                     "results": result,
                                     'id': id,
                                     'accounts': accs,
-                                    'check': check
+                                    'check': True
                                 }
                             )
 
@@ -64,7 +64,7 @@ def home(request):
                                 category=result['category_name'],
                                 followers=followers,
                                 following=following,
-                                media=posts,
+                                medias=posts,
                                 bio=result['biography']
                             ).save()
 
@@ -80,6 +80,8 @@ def home(request):
                 if act == "remove":
                     projectAccounts.objects.filter(account=instaAccounts.objects.filter(userId=acc).first()).first().delete()
                     accs = projectAccounts.objects.filter(project=project).all()
+                    project.size = project.size + 1
+                    project.save()
                     messages.warning(request, "Account Removed")
                     return render(
                                 request,
@@ -122,7 +124,12 @@ def home(request):
                     'check': check
                 }
             )
-
+        if request.method == "POST":
+            act = request.POST.get("act", "")
+            if act == "removeP":
+                id = request.POST.get('id')
+                Project.objects.filter(id=id).delete()
+                return redirect('home')
         userId = request.user.username
         user = User.objects.filter(username=userId).first()
         return render(request, "projects/projects.html", {'project_id': user.project_set.all()})

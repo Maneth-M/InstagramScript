@@ -10,7 +10,7 @@ cl.login('lasticebergs', '123AgunamD')
 
 def checkLikes(likes):
     if int(likes) < 0:
-        return "hidden"
+        return 0
     else:
         return likes
 

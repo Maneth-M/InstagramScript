@@ -22,25 +22,34 @@
 
 {% block navcontent %}
     <li class="nav-item">
-        <a  class="nav-link" href="/projects/analyze/?id={{ project.id }}" onclick="showLoading()">
+        <a  class="nav-link" href="{% url 'analyze-accounts' %}?id={{ id }}" onclick="showLoading()">
             Analyze Accounts
         </a>
     </li>
 
     <li class="nav-item">
-        <a  class="nav-link" href="media/?id={{ project.id }}&" onclick="showLoading()">
+        <a  class="nav-link" href="{% url 'analyze-media' %}?id={{ id }}&" onclick="showLoading()">
             Analyze Media
         </a>
     </li>
 
     <li class="nav-item">
-        <a  class="nav-link" href="/hashtags" onclick="showLoading()">
+        <a  class="nav-link" href="{% url 'hashtags' %}" onclick="showLoading()">
             Hashtag Generator
         </a>
     </li>
+
+
 {% endblock %}
 
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible d-flex justify-content-center">
+                    {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
     <div class="container-fluid" id="main">
         <div class="row">
             <div class="col m-5">
@@ -51,6 +60,7 @@
         </div>
 
         <div class="row">
+
             <div class="col-lg-10 col-md-6 col-sm-6 col-xs-8 d-flex justify-content-center">
                 <div>
                     {% if results == '' %}
@@ -58,75 +68,73 @@
                     {% elif results == "e" %}
                         <h2>System Error or the Account Doesn't exist. Please try again in a few minutes</h2>
                     {% else %}
-                        {% if check == None %}
-                            <div class="card mb-3">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                        <img src="{% static 'accounts/profilePictures/'|add:results.pk|add:'.png' %}" class="img-fluid rounded-start" alt="{{ results.username }}">
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <h5 class="d-flex justify-content-center mb-3"><a class="text-success stretched-link" href="https://www.instagram.com/{{ results.username }}">{{ results.username }}</a></h5>
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="row">
-                                                            <h6 class="text-muted">posts</h6>
-                                                        </div>
-                                                        <div class="row">
-                                                            {% if check == None %}
-                                                                <span class="text-info">{{ results.medias.today|intcomma }}</span>
-                                                            {% else %}
-                                                                <span class="text-info">{{ results.media_count|intcomma }}</span>
-                                                            {% endif %}
-                                                        </div>
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="{% static 'accounts/profilePictures/'|add:results.pk|add:'.png' %}" class="img-fluid rounded-start" alt="{{ results.username }}">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="d-flex justify-content-center mb-3"><a class="text-success stretched-link" href="https://www.instagram.com/{{ results.username }}">{{ results.username }}</a></h5>
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <h6 class="text-muted">posts</h6>
                                                     </div>
-
-                                                    <div class="col">
-                                                        <div class="row">
-                                                            <h6 class="text-muted">Following</h6>
-                                                        </div>
-                                                        <div class="row">
-                                                            {% if check == None %}
-                                                                <span class="text-info">{{ results.following.today|intcomma }}</span>
-                                                            {% else %}
-                                                                <span class="text-info">{{ results.following_count|intcomma }}</span>
-                                                            {% endif %}
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col">
-                                                        <div class="row">
-                                                            <h6 class="text-muted">Following</h6>
-                                                        </div>
-                                                        <div class="row">
-                                                            {% if check == None %}
-                                                                <span class="text-info">{{ results.following.today|intcomma }}</span>
-                                                            {% else %}
-                                                                <span class="text-info">{{ results.following_count|intcomma }}</span>
-                                                            {% endif %}
-                                                        </div>
+                                                    <div class="row">
+                                                        {% if check == None %}
+                                                            <span class="text-info">{{ results.media_count|intcomma }}</span>
+                                                        {% else %}
+                                                            <span class="text-info">{{ results.medias.today|intcomma }}</span>
+                                                        {% endif %}
                                                     </div>
                                                 </div>
 
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <h6 class="text-muted">Following</h6>
+                                                    </div>
+                                                    <div class="row">
+                                                        {% if check == None %}
+                                                            <span class="text-info">{{ results.following_count|intcomma }}</span>
+                                                        {% else %}
+                                                            <span class="text-info">{{ results.following.today|intcomma }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+
+                                                <div class="col">
+                                                    <div class="row">
+                                                        <h6 class="text-muted">Following</h6>
+                                                    </div>
+                                                    <div class="row">
+                                                        {% if check == None %}
+                                                            <span class="text-info">{{ results.following_count|intcomma }}</span>
+                                                        {% else %}
+                                                            <span class="text-info">{{ results.following.today }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
                                             </div>
 
-                                            <br>
-                                            <form method="POST">
-                                                {% csrf_token %}
-                                                <div class="d-flex justify-content-center h-100">
-                                                    <div class="searchbar">
-                                                        <input type="hidden" name="acc" value="{{ results.username }}">
-                                                        <input type="hidden" name="id" value="{{ id }}">
-                                                        <button style="z-index: 2; position: relative" class="btn btn-dark" type="submit">add {{ results.username }}</button>
-                                                    </div>
-                                                </div>
-                                            </form>
                                         </div>
+
+                                        <br>
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                            <div class="d-flex justify-content-center h-100">
+                                                <div class="searchbar">
+                                                    <input type="hidden" name="acc" value="{{ results.username }}">
+                                                    <input type="hidden" name="id" value="{{ id }}">
+                                                    <button style="z-index: 2; position: relative" class="btn btn-dark" type="submit">add {{ results.username }}</button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                        {% endif %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -180,7 +188,7 @@
                                             Media
                                         </h6>
                                         <h5 class="text-info">
-                                            {{ account.account.followers.media|intcomma }}
+                                            {{ account.account.medias.today|intcomma }}
                                         </h5>
                                     </div>
                                 </div>
@@ -201,6 +209,14 @@
                         </div>
                     </div>
                 {% endfor %}
+            {% else %}
+                <div class="col">
+                    <span class="badge rounded-pill bg-light text-dark m-5 d-flex justify-content-center">
+                        <h2>
+                            No Accounts Added
+                        </h2>
+                    </span>
+                </div>
             {% endif %}
         </div>
     </div>

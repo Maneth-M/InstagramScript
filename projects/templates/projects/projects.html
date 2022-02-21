@@ -42,7 +42,19 @@
                                     {{ project.size }}
                                 </p>
                             </p>
-                            <a href="?id={{ project.id }}" class="btn btn-primary stretched-link sticky-bottom">View Project</a>
+                            <a href="?id={{ project.id }}" class="stretched-link hidden"></a>
+                            <div>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="d-flex justify-content-center h-100">
+                                        <div class="searchbar">
+                                            <input type="hidden" name="id" value="{{ project.id }}">
+                                            <input type="hidden" name="act" value="removeP">
+                                            <button style="z-index: 2; position: relative" class="btn btn-danger w-100" type="submit">Delete Project</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
@@ -52,9 +64,11 @@
 
         {% else %}
             <div>
-                <h2>
-                    Sorry You don't have any projects yet
-                </h2>
+                <span class="badge rounded-pill bg-light text-dark d-flex justify-content-center m-5">
+                    <h2>
+                        You don't have any projects yet
+                    </h2>
+                </span>
             </div>
         {% endif %}
     </div>

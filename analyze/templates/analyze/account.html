@@ -16,19 +16,19 @@
 
 {% block navcontent %}
     <li class="nav-item">
-        <a  class="nav-link" href="/projects/analyze/?id={{ project.id }}" onclick="showLoading()">
+        <a  class="nav-link" href="{% url 'analyze-accounts' %}?id={{ id }}" onclick="showLoading()">
             Analyze Accounts
         </a>
     </li>
 
     <li class="nav-item">
-        <a  class="nav-link" href="media/?id={{ project.id }}&" onclick="showLoading()">
+        <a  class="nav-link" href="{% url 'analyze-media' %}?id={{ id }}&" onclick="showLoading()">
             Analyze Media
         </a>
     </li>
 
     <li class="nav-item">
-        <a  class="nav-link" href="/hashtags" onclick="showLoading()">
+        <a  class="nav-link" href="{% url 'hashtags' %}" onclick="showLoading()">
             Hashtag Generator
         </a>
     </li>
@@ -58,9 +58,11 @@
                         <h2 class="text-dark d-flex justify-content-center mb-4">
                             Bio
                         </h2>
-                        <p class="text-dark">
-                            {{ account.bio }}
-                        </p>
+                        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+                            <p class="text-dark">
+                                {{ account.bio }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -110,11 +112,14 @@
                                         #Hashtags
                                     </h2>
                                 </div>
-                                <div class="row text-dark p-4 text-center overflow-auto m-3" style="max-height: 500px">
-                                    <p class="">
-                                        {{ account.hashtags }}
-                                    </p>
+                                <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+                                    <div class="row text-dark p-4 text-center overflow-auto m-3" style="max-height: 500px">
+                                        <p class="">
+                                            {{ account.hashtags }}
+                                        </p>
+                                    </div>
                                 </div>
+
                             </div>
 
 
@@ -123,7 +128,49 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="container-fluid">
+                <div class="col p-4">
+                    <div class="row border shadow bg-dark rounded">
+                        <div style="max-height: 250px; overflow: scroll">
+                            <table class="table">
+                                <thead>
+                                <tr style="color: #75acc4">
+                                    <th  scope="col">Date</th>
+                                    <th scope="col">Followers</th>
+                                    <th scope="col">Following</th>
+                                    <th scope="col">Media</th>
+                                </tr>
+                                </thead>
+                                <tbody style="color: #ecb365">
 
+                                {% for key, item in account.dataIn.items %}
+                                    {% if forloop.counter == 1 %}
+                                        <tr>
+                                            <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
+                                            <td>{{ item.followers|intcomma }}</td>
+                                            <td>{{ item.following|intcomma }}</td>
+                                            <td>{{ item.posts|intcomma }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
+                                            <td>{{ flo }}</td>
+                                            <td>{{ item.following|intcomma }}</td>
+                                            <td>{{ item.posts|intcomma }}</td>
+                                        </tr>
+
+                                    {% endif %}
+
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="container-fluid">
                 <div class="row row-cols-1" >

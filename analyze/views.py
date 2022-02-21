@@ -10,7 +10,7 @@ from django.db.models import Max
 
 #
 cl = Client()
-cl.login('lasticeberg', '123AgunamD')
+cl.login('lasticebergs', '123AgunamD')
 
 def checkLikes(likes):
     if int(likes) < 0:
@@ -157,6 +157,9 @@ def analyzeMedia(request):
         media = Media.objects.filter(user__in=accs).all().annotate(Max("likes")).order_by('-likes__max')
     elif sort == "C":
         media = Media.objects.filter(user__in=accs).all().annotate(Max("comments")).order_by('-comments__max')
+    elif sort == "D":
+        media = Media.objects.filter(user__in=accs).all().order_by('-Date')
+
     print(len(media))
     return render(request, 'analyze/media.html', {
         "medias": media,
@@ -173,5 +176,6 @@ def account(request):
     medias = Media.objects.filter(user=acc).all()
     return render(request, 'analyze/account.html', {
         'account': account,
-        'medias': medias
+        'medias': medias,
+        'id': id
     })
