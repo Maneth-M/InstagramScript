@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure--qw6m^!@4xneno+%gyn+tcwpnehejo6u*o!4_-erod08dp*g3b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["66.29.155.90", "localhost"]
 
 
 # Application definition
@@ -139,7 +139,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'index'
 
 
 #CELERY SETTINGS
