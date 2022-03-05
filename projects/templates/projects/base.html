@@ -33,6 +33,14 @@
                         {% block navcontent %}
                         {% endblock %}
                     </ul>
+                    {% if user.is_authenticated %}
+                        <ul class="navbar-nav justify-content-right">
+                            <li class="nav-item mr-1">
+                                <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                            </li>
+                        </ul>
+                    {% endif %}
+
                 </div>
             </div>
         </nav>
