@@ -15,7 +15,7 @@ access_token = 'dbe703b234cfae50a3baf8e4fa74aee3cb3d11a94ad2'
 client = RiteTagApi(access_token)
 
 cl = Client()
-cl.login('butterbunny23', 'Buttercup@1234')
+cl.login('butterbunny23', '123AgunamD')
 
 
 # Home Page
