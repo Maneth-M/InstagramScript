@@ -10,7 +10,7 @@ from django.db.models import Max
 
 #
 cl = Client()
-cl.login('lasticebergs', '123AgunamD')
+cl.login('butterbunny23', 'Buttercup@1234')
 
 def checkLikes(likes):
     if int(likes) < 0:

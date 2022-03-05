@@ -6,7 +6,7 @@ from accounts.models import media as Media
 import requests, datetime
 
 cl = Client()
-cl.login('lasticebergs', '123AgunamD')
+cl.login('butterbunny23', 'Buttercup@1234')
 
 def checkLikes(likes):
     if int(likes) < 0:
