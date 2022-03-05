@@ -155,16 +155,16 @@ from datetime import timedelta
 CELERY_BEAT_SCHEDULE = {
     'task-number-one': {
         'task': 'update.tasks.scheduledTask',
-        'schedule': timedelta(minutes=10),
+        'schedule': timedelta(minutes=60),
     },
 
     'task-number-two': {
         'task': 'update.tasks.getMediaInfo',
-        'schedule': timedelta(minutes=3),
+        'schedule': timedelta(minutes=15),
     },
 
     'task-number-three': {
         'task': 'update.tasks.getUserDate',
-        'schedule': timedelta(minutes=2),
+        'schedule': timedelta(days=1),
     }
 }
