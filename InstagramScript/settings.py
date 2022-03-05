@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     'django.contrib.humanize',
     'analyze.apps.AnalyzeConfig',
-    'hashtags.apps.HashtagsConfig',
     'accounts.apps.AccountsConfig',
     'projects.apps.ProjectsConfig',
     'update.apps.UpdateConfig',

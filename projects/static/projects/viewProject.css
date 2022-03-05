@@ -1,0 +1,40 @@
+img {
+    max-width: 270px;
+}
+
+.account-card {
+    max-width: 270px;
+}
+
+.account-details {
+    color: #322e38;
+}
+
+.account-card:hover {
+    box-shadow: 5px 5px 5px #f4fef4;
+}
+
+.btn-outline-danger {
+    z-index: 2;
+    position: relative;
+}
+
+
+
+
+@media (max-width:767px) {
+
+    img {
+        max-width: 220px;
+    }
+
+    .account-card {
+        max-width: 220px;
+    }
+
+    #add-account {
+        border-top: 1px solid #000000;
+    }
+}
+
+

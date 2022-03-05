@@ -4,7 +4,7 @@
     <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredPackages">
         <value>
-          <list size="24">
+          <list size="34">
             <item index="0" class="java.lang.String" itemvalue="qrcode" />
             <item index="1" class="java.lang.String" itemvalue="PyQt5-sip" />
             <item index="2" class="java.lang.String" itemvalue="numpy" />
@@ -29,6 +29,16 @@
             <item index="21" class="java.lang.String" itemvalue="distlib" />
             <item index="22" class="java.lang.String" itemvalue="pycryptodome" />
             <item index="23" class="java.lang.String" itemvalue="Pillow" />
+            <item index="24" class="java.lang.String" itemvalue="distro" />
+            <item index="25" class="java.lang.String" itemvalue="LibAppArmor" />
+            <item index="26" class="java.lang.String" itemvalue="lit" />
+            <item index="27" class="java.lang.String" itemvalue="PyYAML" />
+            <item index="28" class="java.lang.String" itemvalue="isc" />
+            <item index="29" class="java.lang.String" itemvalue="apparmor" />
+            <item index="30" class="java.lang.String" itemvalue="soupsieve" />
+            <item index="31" class="java.lang.String" itemvalue="requests" />
+            <item index="32" class="java.lang.String" itemvalue="pyparsing" />
+            <item index="33" class="java.lang.String" itemvalue="click" />
           </list>
         </value>
       </option>
@@ -37,6 +47,7 @@
       <option name="ignoredErrors">
         <list>
           <option value="N802" />
+          <option value="N806" />
         </list>
       </option>
     </inspection_tool>

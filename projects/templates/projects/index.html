@@ -1,36 +1,182 @@
 {% extends "projects/base.html" %}
 {% load bootstrap5 %}
+{% load static %}
+{% load crispy_forms_tags %}
 
 
-{% block navcontent %}
-    <li class="nav-item">
-        <a  class="nav-link" href="/hashtags" onclick="showLoading()">
-            Hashtag Generator
-        </a>
-    </li>
+{% block head %}
+    <link rel="stylesheet" href="{% static 'projects/index.css' %}">
 {% endblock %}
 
+
+{% block messages %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock messages %}
+
 {% block content %}
+    <div class="container-fluid">
+        <div class="row border-bottom">
+            <div class="col-md-8 col-sm-12 border-end">
+                <div class="container-fluid">
+                    <div class="row mx-auto">
+                        {% if projects %}
+                            <h3 class="text-center my-4">
+                                Your Projects
+                            </h3>
+                        {% else %}
+                            <h3 class="text-center text-muted my-4">
+                                You have no Projects
+                            </h3>
+                        {% endif %}
 
-    <div class="m-5">
-    {#Welcome Message#}
-        <div class="text-center mt-2 text-uppercase p-3 text-white">
-            <h1>Welcome, {{ user.username }}</H1>
-        </div>
-
-    {#Create a new Project#}
-        <div class="container">
-            <div class="row d-flex justify-content-center h-100">
-                <div class="col d-flex justify-content-center">
-                    <a class="btn btn-outline-light" href="{% url 'new-project' %}">➕ Create Project</a>
-                </div>
-
-                <div class="col d-flex justify-content-center">
-                    <a class="btn btn-outline-light" href="{% url 'home' %}">Your Projects</a>
+                    </div>
+                    <div class="row row-cols-auto">
+                        {% if projects %}
+                        {% for project in projects %}
+                            <div class="col my-2 mx-auto">
+                                <div class="card shadow border rounded">
+                                    <div class="card-body">
+                                        <h4 class="card-title text-center">
+                                            {{ project }}
+                                        </h4>
+                                        <h6 class="card-subtitle text-muted mb-2 text-center">
+                                            {{ project.size }} Accounts Left
+                                        </h6>
+                                        <a href="projects/?id={{ project.id }}" class="stretched-link hidden"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% else %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
+            <div class="col-md-4" id="profile">
+                <div class="container-fluid border-top">
+                    <div class="row mt-4">
+                        <h3 class="text-center text-capitalize">
+                            {{ user.username }}
+                        </h3>
+                    </div>
+                    <div class="container-fluid">
+                        <div class="row row-cols-1">
+                            <div class="col-mt-2">
+                                <div class="container mt-4">
+                                    <div class="row row-cols-auto p-3">
+                                        <div class="col mx-auto mt-2">
+                                            <h5 class="profile-titles text-center">
+                                                Projects
+                                            </h5>
+                                            <h6 class="text-muted text-center">
+                                                {{ projects.count }}
+                                            </h6>
+                                        </div>
+
+                                        <div class="col mx-auto mt-2">
+                                            <h5 class="profile-titles text-center">
+                                                Plan
+                                            </h5>
+                                            <h6 class="text-muted text-center">
+                                                Payment Plan
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5 row-cols-auto border-top">
+                        <div class="col-12 mt-4">
+                            <h4 class="text-center">
+                                Create a New Project
+                            </h4>
+                        </div>
+
+                        <div class="col-12 mx-auto d-flex justify-content-center mt-4 p-3">
+                            <form method = "POST" class="border-bottom mb-4 text-white">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                                <input class="btn btn-outline-dark" type="submit" value="Create">
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-3">
+            <h3 class="text-center text-capitalize">
+                #Hashtag Generator
+            </h3>
+        </div>
+        <div class="row mt-3">
+            <div class="container">
+                <div class="row row-cols-auto">
+                    <div class="col mx-auto">
+                        <div class="row row-cols-auto">
+                            <div class="col mx-auto">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row row-cols-auto my-3">
+                                        <div class="col mx-auto">
+                                            <input class="form-control" type="text" name="txt" placeholder="Text or Image Link" required>
+                                        </div>
+                                    </div>
+                                    <div class="row row-cols-auto my-3">
+                                        <div class="col d-flex justify-content-end mx-auto">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="tp" id="exampleRadios1" value="wrd" checked>
+                                                <label class="form-check-label" for="exampleRadios1">
+                                                    Search By Text
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col d-flex justify-content-start mx-auto">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="tp" id="exampleRadios1" value="img">
+                                                <label class="form-check-label" for="exampleRadios1">
+                                                    Search By Image
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row row-cols-auto">
+                                        <div class="col mx-auto">
+                                            <button class="btn btn-outline-primary" type="submit">Generate Hashtags</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% if hashtags %}
+                        <div class="col mx-auto border bg-light">
+                            <div class="container">
+                                <div class="row row-cols-5 overflow-scroll hashtag-results">
+                                    {% for item in hashtags %}
+
+                                        <div class="col mx-auto">
+                                            <h5 class="text-dark">
+                                                #{{ item.hashtag }}&nbsp;
+                                            </h5>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
+
 
 {% endblock content %}

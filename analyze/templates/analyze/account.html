@@ -3,15 +3,16 @@
 {% load static %}
 {% load humanize %}
 {% load parse_iso %}
+{% load createDict %}
+{% load createDictMedia %}
 
 {% block head %}
     <link
             rel="stylesheet"
             href="https://unpkg.com/swiper@8/swiper-bundle.min.css"
     />
-
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'analyze/css/cards.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'analyze/css/account.css' %}">
 {% endblock head %}
 
 {% block navcontent %}
@@ -27,267 +28,294 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a  class="nav-link" href="{% url 'hashtags' %}" onclick="showLoading()">
-            Hashtag Generator
-        </a>
-    </li>
+
 {% endblock %}
 
 
 {% block content %}
     <div class="container-fluid">
-        <div class="row text-light">
-            <div class="d-flex justify-content-center">
-                <h1 class="">
-                    {{ account }}
+        <div class="row">
+            <div class="text-center">
+                <h1 class="text-muted">
+
+                    <a href="https://www.instagram.com/{{ account }}" target="_blank" >{{ account|upper }}</a>
                 </h1>
             </div>
         </div>
-        <div class="row text-light">
-            <div class="col-md-4 p-5">
-                <div class="container-fluid p-5">
-                    <div class="card">
-                        <div class="d-flex justify-content-center">
-                            <img src="{% static 'accounts/profilePictures/'|add:account.userId|add:'.png' %}" alt="">
-                        </div>
-                    </div>
-                </div>
-                <div class="container-fluid mt-5">
-                    <div class="card p-4">
-                        <h2 class="text-dark d-flex justify-content-center mb-4">
-                            Bio
-                        </h2>
-                        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
-                            <p class="text-dark">
-                                {{ account.bio }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        <div class="row row-cols-auto border-top mt-3 ">
+            <div class="col mx-auto shadow mt-3">
+                <img src="{% static 'accounts/profilePictures/'|add:account.userId|add:'.png' %}" alt="{{ account }}">
             </div>
-            <div class="col-md-4">
-                <div class="container-fluid p-5">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="container-fluid">
-                                <div class="col">
-                                    <div class="row">
-                                        <h2 class="text-muted">
-                                            Followers:
-                                        </h2>
-                                        <h2 class="text-dark">
-                                            {{ account.followers.today|intcomma }}
-                                        </h2>
-                                    </div>
-                                    <div class="row">
-                                        <h2 class="text-muted">
-                                            Following:
-                                        </h2>
-                                        <h2 class="text-dark">
-                                            {{ account.following.today|intcomma }}
-                                        </h2>
-                                    </div>
-                                    <div class="row">
-                                        <h2 class="text-muted">
-                                            Posts:
-                                        </h2>
-                                        <h2 class="text-dark">
-                                            {{ account.media.today|intcomma }}
-                                        </h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 p-5">
-                <div class="container-fluid p-5">
-                    <div class="card">
-                        <div class="d-flex justify-content-center">
+            <div class="col mx-auto mt-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="container-fluid">
                             <div class="col">
-                                <div class="row">
-                                    <h2 class="text-dark text-center">
-                                        #Hashtags
+                                <div class="row mx-1">
+                                    <h2 class="text-muted">
+                                        Followers:
+                                    </h2>
+                                    <h2 class="text-dark">
+                                        {{ account.followers.today|intcomma }}
                                     </h2>
                                 </div>
-                                <div class="card shadow-lg p-3 mb-5 bg-white rounded">
-                                    <div class="row text-dark p-4 text-center overflow-auto m-3" style="max-height: 500px">
-                                        <p class="">
-                                            {{ account.hashtags }}
-                                        </p>
-                                    </div>
+                                <div class="row mx-1">
+                                    <h2 class="text-muted">
+                                        Following:
+                                    </h2>
+                                    <h2 class="text-dark">
+                                        {{ account.following.today|intcomma }}
+                                    </h2>
                                 </div>
-
+                                <div class="row mx-1">
+                                    <h2 class="text-muted">
+                                        Posts:
+                                    </h2>
+                                    <h2 class="text-dark">
+                                        {{ account.medias.today|intcomma }}
+                                    </h2>
+                                </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col mx-auto mt-3">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">
+                            Bio
+                        </h3>
+                        <h5 class="card-text mt-1">
+                            {{ account.bio }}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col mx-auto mt-3">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">
+                            #Hashtags
+                        </h3>
+                        <h5 class="card-text overflow-auto mt-1">
+                            {{ account.hashtags }}
+                        </h5>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <div class="container-fluid">
-                <div class="col p-4">
-                    <div class="row border shadow bg-dark rounded">
-                        <div style="max-height: 250px; overflow: scroll">
-                            <table class="table">
-                                <thead>
-                                <tr style="color: #75acc4">
-                                    <th  scope="col">Date</th>
-                                    <th scope="col">Followers</th>
-                                    <th scope="col">Following</th>
-                                    <th scope="col">Media</th>
-                                </tr>
-                                </thead>
-                                <tbody style="color: #ecb365">
 
-                                {% for key, item in account.dataIn.items %}
-                                    {% if forloop.counter == 1 %}
-                                        <tr>
-                                            <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
-                                            <td>{{ item.followers|intcomma }}</td>
-                                            <td>{{ item.following|intcomma }}</td>
-                                            <td>{{ item.posts|intcomma }}</td>
-                                        </tr>
+        <div class="row mt-5">
+            <div class="text-center text-secondary">
+                <h2>
+                    Account Analytics
+                </h2>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 mx-auto">
+            <div class="col p-4">
+                <div class="row border shadow bg-light rounded">
+                    <div class="overflow-scroll account-growth">
+                        <table class="table">
+                            <thead>
+                            <tr class="table-secondary">
+                                <th  scope="col">Date</th>
+                                <th scope="col">Followers</th>
+                                <th scope="col">Followers Growth</th>
+                                <th scope="col">Following</th>
+                                <th scope="col">Following Growth</th>
+                                <th scope="col">Media</th>
+                                <th scope="col">Media Growth</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for key, item in account.dataIn|createDict %}
+                                <tr class="text-center">
+                                    <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
+                                    <td>{{ item.cfollowers|intcomma }}</td>
+                                    {% if item.followers < 0 %}
+                                        <td class="text-danger">{{ item.followers|intcomma }}</td>
+                                    {% elif item.followers != 0 %}
+                                        <td class="text-success">+{{ item.followers|intcomma }}</td>
                                     {% else %}
-                                        <tr>
-                                            <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
-                                            <td>{{ flo }}</td>
-                                            <td>{{ item.following|intcomma }}</td>
-                                            <td>{{ item.posts|intcomma }}</td>
-                                        </tr>
-
+                                        <td class="text-muted">-</td>
                                     {% endif %}
-
-
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                                    <td>{{ item.cfollowing|intcomma }}</td>
+                                    {% if item.following < 0 %}
+                                        <td class="text-danger">{{ item.following|intcomma }}</td>
+                                    {% elif item.following != 0 %}
+                                        <td class="text-success">+{{ item.following|intcomma }}</td>
+                                    {% else %}
+                                        <td class="text-muted">-</td>
+                                    {% endif %}
+                                    <td>{{ item.cposts|intcomma }}</td>
+                                    {% if item.posts < 0 %}
+                                        <td class="text-danger">{{ item.posts|intcomma }}</td>
+                                    {% elif item.posts != 0 %}
+                                        <td class="text-success">+{{ item.posts|intcomma }}</td>
+                                    {% else %}
+                                        <td class="text-muted">-</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="container-fluid">
-                <div class="row row-cols-1" >
-                    {% for media in medias %}
-                        <div class="col m-2 d-flex justify-content-center">
-                            <div style="background: #041c32; max-height: 400px; width: 80%; min-height: 350px">
-                                <div class="row">
-                                    <div class="col-md-4 col-sm-6 col-xs-6 d-flex justify-content-center shadow rounded" style="background-color: #04293a">
-                                        {% if media.isVideo %}
-                                            <div class="h_iframe mt-1 mx-2">
-                                                <iframe style="min-height: 350px; max-width: 100%" allowfullscreen src="{% static 'accounts/media/videos/'|add:media.mediaId|add:'.mp4' %}"></iframe>
-                                            </div>
 
-                                        {% elif media.isMultiple %}
-                                            <div class="swiper mySwiper ">
-                                                <div class="swiper-wrapper p-2" style="max-height: 350px">
-                                                    {% for item, value in media.multiItems.items %}
-                                                        {% if value.isVideo %}
-                                                            <div class="swiper-slide">
-                                                                <div class="h_iframe" >
-                                                                    <iframe style="min-height: 350px; max-width: 100%" allowfullscreen src="{% static 'accounts/media/videos/'|add:item|add:'.mp4' %}"></iframe>
-                                                                </div>
-                                                            </div>
-                                                        {% else %}
-                                                            <div class="swiper-slide" style="width: auto; ">
-                                                                <img style="max-width: 100%" src="{% static 'accounts/media/images/'|add:item|add:'.png' %}">
-                                                            </div>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </div>
+        <div class="row mt-3">
+            <div class="text-center text-secondary">
+                <h2>
+                    Account Media
+                </h2>
+            </div>
+        </div>
 
-                                                <div class="swiper-button-next"></div>
-                                                <div class="swiper-button-prev"></div>
-                                                <div class="swiper-pagination"></div>
-                                            </div>
-                                        {% else %}
-                                            <div class="p-2 d-flex justify-content-center">
-                                                <img style="max-height: 350px; max-width: 100%; " src="{% static 'accounts/media/images/'|add:media.mediaId|add:'.png' %}"  >
-                                            </div>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="col-md-8 col-sm-6 col-xs-6 p-2">
-                                        <div class="row m-2 border shadow bg-dark rounded">
-                                            <div class="col my-auto">
-                                                <a class="text-decoration-none" href="/projects/analyze/account/?acc={{ media.user.userId }}">
-                                                    <h3 class="fw-bold" style="color: #c22525">
-                                                        {{ media.user }}
-                                                    </h3>
-                                                </a>
-
-                                            </div>
-                                            <div class="col">
-                                                <h5 class="text-muted">
-                                                    Comments
-                                                </h5>
-                                                <h4 class="text-primary">
-                                                    {{ media.comments|intcomma }}
-                                                </h4>
-                                            </div>
-                                            <div class="col">
-                                                <h5 class="text-muted">
-                                                    Views
-                                                </h5>
-                                                <h4 class="text-primary">
-                                                    {{ media.views|intcomma }}
-                                                </h4>
-                                            </div>
-                                            <div class="col">
-                                                <h5 class="text-muted">
-                                                    Likes
-                                                </h5>
-                                                <h4 class="text-primary">
-                                                    {{ media.likes|intcomma }}
-                                                </h4>
-                                            </div>
-                                            <div class="col">
-                                                <h5 class="text-muted">
-                                                    Date Posted
-                                                </h5>
-                                                <h4 class="text-primary">
-                                                    {{ media.Date|date:"M d, Y" }}
-                                                </h4>
-                                            </div>
+        <div class="row row-cols-auto mt-2">
+            {% for media in medias %}
+                <div class="col mx-auto my-2 rounded shadow">
+                    <div class="container">
+                        <div class="card">
+                            <div class="row">
+                                <div class="col">
+                                    {% if media.isVideo %}
+                                        <div class="h_iframe d-flex justify-content-center">
+                                            <iframe allowfullscreen src="{% static 'accounts/media/videos/'|add:media.mediaId|add:'.mp4' %}"></iframe>
                                         </div>
-                                        <div class="row m-2 border shadow bg-dark rounded">
-                                            <div style="max-height: 250px; overflow: scroll">
-                                                <table class="table">
-                                                    <thead>
-                                                    <tr style="color: #75acc4">
-                                                        <th  scope="col">Date</th>
-                                                        <th scope="col">Views</th>
-                                                        <th scope="col">Likes</th>
-                                                        <th scope="col">Comments</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody style="color: #ecb365">
-                                                    {% for key, item in media.dataIn.items %}
-                                                        <tr>
-                                                            <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
-                                                            <td>{{ item.views|intcomma }}</td>
-                                                            <td>{{ item.likes|intcomma }}</td>
-                                                            <td>{{ item.comments|intcomma }}</td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
+                                    {% elif media.isMultiple %}
+                                        <div class="swiper mySwiper">
+                                            <div class="swiper-wrapper">
+                                                {% for item, value in media.multiItems.items %}
+                                                    {% if value.isVideo %}
+                                                        <div class="swiper-slide">
+                                                            <div class="h_iframe" >
+                                                                <iframe allowfullscreen src="{% static 'accounts/media/videos/'|add:item|add:'.mp4' %}"></iframe>
+                                                            </div>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="swiper-slide">
+                                                            <img src="{% static 'accounts/media/images/'|add:item|add:'.png' %}">
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
                                             </div>
+
+                                            <div class="swiper-button-next"></div>
+                                            <div class="swiper-button-prev"></div>
+                                            <div class="swiper-pagination"></div>
+                                        </div>
+                                    {% else %}
+                                        <div class="d-flex justify-content-center">
+                                            <img src="{% static 'accounts/media/images/'|add:media.mediaId|add:'.png' %}"  >
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <h3 class="text-muted text-center">
+                                                {{ media.user }}
+                                            </h3>
+                                        </div>
+                                        <div class="container">
+                                            <div class="row row-cols-auto">
+                                                <div class="col mx-auto">
+                                                    <h5 class="text-muted text-center">
+                                                        Comments
+                                                    </h5>
+                                                    <h4 class="text-primary text-center">
+                                                        {{ media.comments|intcomma }}
+                                                    </h4>
+                                                </div>
+                                                <div class="col mx-auto">
+                                                    <h5 class="text-muted text-center">
+                                                        Views
+                                                    </h5>
+                                                    <h4 class="text-primary text-center">
+                                                        {{ media.views|intcomma }}
+                                                    </h4>
+                                                </div>
+                                                <div class="col mx-auto">
+                                                    <h5 class="text-muted text-center">
+                                                        Likes
+                                                    </h5>
+                                                    <h4 class="text-primary text-center">
+                                                        {{ media.likes|intcomma }}
+                                                    </h4>
+                                                </div>
+                                                <div class="col mx-auto">
+                                                    <h5 class="text-muted text-center">
+                                                        Date Posted
+                                                    </h5>
+                                                    <h4 class="text-primary text-center">
+                                                        {{ media.Date|date:"M d, Y" }}
+                                                    </h4>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="row m-2 border shadow rounded">
+                                        <div class="overflow-scroll account-media">
+                                            <table class="table">
+                                                <thead>
+                                                <tr class="table-secondary">
+                                                    <th  scope="col">Date</th>
+                                                    <th scope="col">Views</th>
+                                                    <th scope="col">Views Growth</th>
+                                                    <th scope="col">Likes</th>
+                                                    <th scope="col">Likes Growth</th>
+                                                    <th scope="col">Comments</th>
+                                                    <th scope="col">Comments Growth</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for key, item in media.dataIn|createDictMedia %}
+                                                    <tr>
+                                                        <th scope="row">{{ item.date|parse_iso|date:'M d, Y H:i' }}</th>
+                                                        <td>{{ item.cviews|intcomma }}</td>
+                                                        {% if item.views < 0 %}
+                                                            <td class="text-danger">{{ item.views|intcomma }}</td>
+                                                        {% elif item.views != 0 %}
+                                                            <td class="text-success">+{{ item.views|intcomma }}</td>
+                                                        {% else %}
+                                                            <td class="text-muted">-</td>
+                                                        {% endif %}
+                                                        <td>{{ item.clikes|intcomma }}</td>
+                                                        {% if item.likes < 0 %}
+                                                            <td class="text-danger">{{ item.likes|intcomma }}</td>
+                                                        {% elif item.likes != 0 %}
+                                                            <td class="text-success">+{{ item.likes|intcomma }}</td>
+                                                        {% else %}
+                                                            <td class="text-muted">-</td>
+                                                        {% endif %}
+                                                        <td>{{ item.ccomments|intcomma }}</td>
+                                                        {% if item.comments < 0 %}
+                                                            <td class="text-danger">{{ item.comments|intcomma }}</td>
+                                                        {% elif item.comments != 0 %}
+                                                            <td class="text-success">+{{ item.comments|intcomma }}</td>
+                                                        {% else %}
+                                                            <td class="text-muted">-</td>
+                                                        {% endif %}
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 

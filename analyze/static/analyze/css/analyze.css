@@ -1,0 +1,13 @@
+
+.card:hover {
+    box-shadow: 5px 5px 5px #f4fef4;
+}
+
+@media (max-width:767px) {
+
+    img {
+        max-width: 220px;
+    }
+
+
+}

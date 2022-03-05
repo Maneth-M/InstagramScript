@@ -9,150 +9,165 @@ from .models import Project, projectAccounts
 from accounts.models import instaAccounts, media
 from instagrapi import Client
 import requests
+from ritetag import RiteTagApi
 
-#
+access_token = 'dbe703b234cfae50a3baf8e4fa74aee3cb3d11a94ad2'
+client = RiteTagApi(access_token)
+
 cl = Client()
 cl.login('lasticebergs', '123AgunamD')
 
 
 # Home Page
-def home(request):
+
+def index(request):
     if request.user.is_authenticated:
-        id = request.GET.get('id', '')
-        key = request.GET.get('key', '').lower()
-        check = ""
-        result = ''
+        userId = request.user.username
+        hashtags = ""
+        if request.method == "POST":
+            txt = request.POST.get('txt')
+            tp = request.POST.get('tp')
+            if txt:
+                if tp == "wrd":
+                    hashtags = client.hashtag_suggestion_for_text(txt)
 
-        if not id == "":
-            project = Project.objects.filter(id=id).first()
-            if request.method == "GET":
-                if not len(key) == 0:
-                    print(key)
-                    check = instaAccounts.objects.filter(username=key.lower()).first()
-                    if check is not None:
-                        check = instaAccounts.objects.filter(username=key.lower()).first().projectaccounts_set.filter(project=project).first()
-                        if check == None:
-                            result = instaAccounts.objects.filter(username=key.lower()).first()
-                            accs = projectAccounts.objects.filter(project=project).all()
-                            return render(
-                                request,
-                                "projects/viewProject.html",
-                                {
-                                    'project': project,
-                                    "results": result,
-                                    'id': id,
-                                    'accounts': accs,
-                                    'check': True
-                                }
-                            )
+                elif tp == "img":
+                    hashtags = client.hashtag_suggestion_for_image(txt)
 
-                    if check == None:
-                        try:
-                            result = cl.user_info_by_username(key).dict()
-                            imgResponse = requests.get(result['profile_pic_url_hd'])
-                            with open(f"accounts/static/accounts/profilePictures/{result['pk']}.png", 'wb') as f:
-                                f.write(imgResponse.content)
-                            followers = {"today":result['follower_count']}
-                            following = {"today":result['following_count']}
-                            posts = {"today":result['media_count']}
-                            instaAccounts(
-                                username=key.lower(),
-                                userId=result['pk'],
-                                isVerified=bool(result['is_verified']),
-                                isBusiness=result['is_business'],
-                                businessCategory=result['business_category_name'],
-                                category=result['category_name'],
-                                followers=followers,
-                                following=following,
-                                medias=posts,
-                                bio=result['biography']
-                            ).save()
+                user = User.objects.filter(username=userId).first()
+                return render(request, "projects/index.html", {
+                    "user": user,
+                    "projects":  user.project_set.all(),
+                    "form": NewProject,
+                    "hashtags": hashtags
+                })
+            form = NewProject(request.POST)
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.user = request.user
+                obj.save()
+                return redirect("index")
+            else:
+                messages.error(request, "Something went wrong. Please Try again")
 
-                        except Exception as e:
-                            print(e)
-                            result = "e"
-                    else:
-                        messages.info(request, "Account Already Added")
+        user = User.objects.filter(username=userId).first()
+        return render(request, "projects/index.html", {
+            "user": user,
+            "projects":  user.project_set.all(),
+            "form": NewProject,
+            "hashtags": hashtags
+        })
+    else:
+        return redirect('login')
 
-            if request.method == "POST" and project.size > 0:
-                acc = request.POST.get("acc")
-                act = request.POST.get("act", "")
-                if act == "remove":
-                    projectAccounts.objects.filter(account=instaAccounts.objects.filter(userId=acc).first()).first().delete()
-                    accs = projectAccounts.objects.filter(project=project).all()
-                    project.size = project.size + 1
+
+def projects(request):
+    result = None
+    check = True
+    if request.user.is_authenticated:
+
+        if request.method == "POST":
+            act = request.POST.get("act")
+            projectId = request.POST.get("id")
+            key = request.POST.get("key")
+            project = Project.objects.filter(id=projectId).first()
+            if act == "delete":
+                project.delete()
+                messages.warning(request, "Project Deleted")
+                return redirect("index")
+            account = instaAccounts.objects.filter(username=key.lower()).first()
+            if act == "add":
+                if project.size > 0:
+                    projectAccounts(
+                        account=account,
+                        project=project
+                    ).save()
+                    project.size = project.size - 1
                     project.save()
-                    messages.warning(request, "Account Removed")
-                    return render(
-                                request,
-                                "projects/viewProject.html",
-                                {
-                                    'project': project,
-                                    "results": result,
-                                    'id': id,
-                                    'accounts': accs,
-                                    'check': check
-                                }
-                            )
-                result = instaAccounts.objects.filter(username=acc.lower()).first()
+                    messages.success(request, f"{key} Added to the Projects")
+                else:
+                    messages.error(request, f"Project is Full")
 
-                projectAccounts(
-                    account=result,
-                    project=project
-                ).save()
-
-                project.size = project.size - 1
+            elif act == "remove":
+                projectAccounts.objects.filter(account=account, project=project).first().delete()
+                project.size += 1
                 project.save()
-                messages.success(request, f"{acc} Added to the Project")
-                messages.info(request, f"You have {project.size} Accounts Left")
-                check = instaAccounts.objects.filter(username=key).first().projectaccounts_set.filter(project=project).first()
-
-            elif project.size <= 0 :
-                messages.error(request, f"You have {project.size} Accounts Left")
-
-            accs = projectAccounts.objects.filter(project=project).all()
-
-
+                messages.success(request, f"{key} Removed")
             return render(
                 request,
                 "projects/viewProject.html",
                 {
-                    'project': project,
-                    "results": result,
-                    'id': id,
-                    'accounts': accs,
-                    'check': check
+                    "accounts": projectAccounts.objects.filter(project=projectId).all(),
+                    "project": Project.objects.filter(id=projectId).first(),
+                    "result": result,
+                    "check": check,
                 }
             )
-        if request.method == "POST":
-            act = request.POST.get("act", "")
-            if act == "removeP":
-                id = request.POST.get('id')
-                Project.objects.filter(id=id).delete()
-                return redirect('home')
+        projectId = request.GET.get("id", "")
         userId = request.user.username
+        key = request.GET.get("key", "")
+        if key:
+            if not instaAccounts.objects.filter(username=key.lower()).exists():
+                try:
+                    result = cl.user_info_by_username(key).dict()
+                    if result['is_private']:
+                        messages.warning(request, "Private Account")
+                        return render(
+                            request,
+                            "projects/viewProject.html",
+                            {
+                                "accounts": projectAccounts.objects.filter(project=projectId).all(),
+                                "project": Project.objects.filter(id=projectId).first(),
+                                "result": result,
+                                "check": check
+                            }
+                        )
+                    imgResponse = requests.get(result['profile_pic_url_hd'])
+                    with open(f"accounts/static/accounts/profilePictures/{result['pk']}.png", 'wb') as f:
+                        f.write(imgResponse.content)
+                    followers = {"today":result['follower_count']}
+                    following = {"today":result['following_count']}
+                    posts = {"today":result['media_count']}
+                    instaAccounts(
+                        username=key.lower(),
+                        userId=result['pk'],
+                        isVerified=bool(result['is_verified']),
+                        isBusiness=result['is_business'],
+                        businessCategory=result['business_category_name'],
+                        category=result['category_name'],
+                        followers=followers,
+                        following=following,
+                        medias=posts,
+                        bio=result['biography']
+                    ).save()
+                except Exception as e:
+                    messages.error(request, "Something went wrong. Please Try again")
+            if projectAccounts.objects.filter(project=Project.objects.filter(id=projectId).first(), account=instaAccounts.objects.filter(username=key.lower()).first()).exists():
+                messages.warning(request, "Account Already Added")
+            return render(
+                request,
+                "projects/viewProject.html",
+                {
+                    "accounts": projectAccounts.objects.filter(project=projectId).all(),
+                    "project": Project.objects.filter(id=projectId).first(),
+                    "result": instaAccounts.objects.filter(username=key.lower()).first(),
+                    "check": projectAccounts.objects.filter(project=Project.objects.filter(id=projectId).first(), account=instaAccounts.objects.filter(username=key.lower()).first()).exists()
+
+                }
+            )
+
+
         user = User.objects.filter(username=userId).first()
-        return render(request, "projects/projects.html", {'project_id': user.project_set.all()})
+        if user.project_set.filter(id=projectId).exists():
+            return render(
+                request,
+                "projects/viewProject.html",
+                {
+                    "accounts": projectAccounts.objects.filter(project=projectId).all(),
+                    "project": Project.objects.filter(id=projectId).first(),
+                    "result": result,
+                    "check": check
+                }
+            )
     else:
-        return redirect('login')
-
-
-# Create New Project
-def new(request):
-    if request.method == "POST":
-        form = NewProject(request.POST)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.user = request.user
-            obj.save()
-            return redirect("home")
-        else:
-            messages.error(request, "Something went wrong. Please Try again")
-    return render(request, "projects/new.html", {"form": NewProject})
-
-
-def index(request):
-    if request.user.is_authenticated:
-        return render(request, "projects/index.html")
-    else:
-        return redirect('login')
+        return redirect("login")

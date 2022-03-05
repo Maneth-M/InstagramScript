@@ -1,0 +1,32 @@
+iframe, img, video, .swiper, .mySwiper  {
+    min-width: 300px;
+    min-height: 300px;
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.account-media {
+    max-height: 300px;
+}
+
+tbody {
+    color: black;
+}
+thead tr th {
+    position: sticky;
+    top: 0;
+}
+
+a {
+    text-decoration: inherit;
+    color: inherit;
+}
+
+@media (max-width:767px) {
+
+    iframe, img, video, .swiper, .mySwiper  {
+        max-width: 100px;
+        max-height: 100px;
+    }
+
+}

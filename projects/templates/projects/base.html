@@ -8,7 +8,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" type="text/css" href="{% static 'projects/main.css' %}">
     {% block head %}
         {% if title %}
@@ -20,8 +19,10 @@
 
 </head>
 <body>
-    <div class="m-2">
-        <nav class="navbar navbar-dark navbar-expand-lg bg-dark mt-3">
+    {% block messages %}
+    {% endblock messages %}
+    <div class="m-2 px-4">
+        <nav class="navbar navbar-light navbar-expand-lg mt-3">
             <div class="container-fluid">
                 <a href="/" class="navbar-brand">Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
